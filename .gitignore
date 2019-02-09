@@ -3,3 +3,4 @@ wurst.dependencies
 .vscode/settings.json
 *.dependencies
 *.args
+*.build
