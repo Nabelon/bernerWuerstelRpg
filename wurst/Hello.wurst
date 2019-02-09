@@ -9,7 +9,7 @@ vec2 array creepRespawnPositions
 real array creepRespawnDirection
 real creepRespawnTime = 10.0
 init
-	print("Hello World")
+	print("Select a hero by attacking it")
 	//bounty rewards
 	CustomTrigger.addInitialTriggers()
 

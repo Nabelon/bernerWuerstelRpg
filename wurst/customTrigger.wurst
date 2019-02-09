@@ -12,19 +12,22 @@ public class CustomTrigger
             let t = GetTriggerUnit()
             if(t.getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE)
                 let gold = (t.getLevel() + 10) * 5
+                let goldText = CreateTextTagUnitBJ("+"+gold.toString(), t, 0, 10, 90, 85, 0, 0)
+                goldText.setVelocity(0, 0.02)
+                doAfter(2.0)->
+                    goldText.destr()
+
                 for u in GetUnitsInRangeOfLocAll(1000.0, GetTriggerUnit().getLoc())
-                    let goldText = CreateTextTagUnitBJ(gold.toString(), t, 0, 10, 90, 85, 0, 0)
-                    goldText.setVelocity(0, 0.05)    
-                    goldText.setLifespan(2.0)
                     if(u.isType(UNIT_TYPE_HERO) and (u.getOwner().getId() != PLAYER_NEUTRAL_AGGRESSIVE))
                         
                         let exp = (t.getLevel()*100*(t.getLevel()+10)/max(t.getLevel()+10,u.getLevel())).floor()
                         u.addXp(exp, true)
                         
                         u.getOwner().addGold(gold)
-                        let expText = CreateTextTagUnitBJ(exp.toString(), t, 0, 10, 0, 80, 50, 0)
-                        expText.setVelocity(0, 0.5)
-                        expText.setLifespan(2.0)
+                        let expText = CreateTextTagUnitBJ(exp.toString()+"exp", u, 0, 10, 0, 80, 50, 0)
+                        expText.setVelocity(0, 0.02)
+                        doAfter(2.0)->
+                            expText.destr()
                         
         //creep respawn				
         //set positions
@@ -41,8 +44,9 @@ public class CustomTrigger
             if(t.getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE and t.getUserData() > 0)
                 doAfter(creepRespawnTime)->
                     vec2 pos = creepRespawnPositions[t.getUserData()]
-                    CreateUnit(Player(PLAYER_NEUTRAL_AGGRESSIVE), t.getTypeId(), pos.x, pos.y, 0)
-        
+                    let u = CreateUnit(Player(PLAYER_NEUTRAL_AGGRESSIVE), t.getTypeId(), pos.x, pos.y, 0)
+                    u.setUserData(t.getUserData())
+        //select hero
         EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
             let t=GetTriggerUnit()
             let a=GetAttacker()
