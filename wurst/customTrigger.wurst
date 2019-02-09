@@ -11,12 +11,21 @@ public class CustomTrigger
         EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
             let t = GetTriggerUnit()
             if(t.getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE)
-                
+                let gold = (t.getLevel() + 10) * 5
                 for u in GetUnitsInRangeOfLocAll(1000.0, GetTriggerUnit().getLoc())
+                    let goldText = CreateTextTagUnitBJ(gold.toString(), t, 0, 10, 90, 85, 0, 0)
+                    goldText.setVelocity(0, 0.05)    
+                    goldText.setLifespan(2.0)
                     if(u.isType(UNIT_TYPE_HERO) and (u.getOwner().getId() != PLAYER_NEUTRAL_AGGRESSIVE))
-                        u.addXp((t.getLevel()*100*(t.getLevel()+10)/max(t.getLevel()+10,u.getLevel())).floor(), true)
-                        u.getOwner().addGold((t.getLevel() + 10) * 5)
-    
+                        
+                        let exp = (t.getLevel()*100*(t.getLevel()+10)/max(t.getLevel()+10,u.getLevel())).floor()
+                        u.addXp(exp, true)
+                        
+                        u.getOwner().addGold(gold)
+                        let expText = CreateTextTagUnitBJ(exp.toString(), t, 0, 10, 0, 80, 50, 0)
+                        expText.setVelocity(0, 0.5)
+                        expText.setLifespan(2.0)
+                        
         //creep respawn				
         //set positions
         int tmpInt = 1
@@ -33,7 +42,7 @@ public class CustomTrigger
                 doAfter(creepRespawnTime)->
                     vec2 pos = creepRespawnPositions[t.getUserData()]
                     CreateUnit(Player(PLAYER_NEUTRAL_AGGRESSIVE), t.getTypeId(), pos.x, pos.y, 0)
-
+        
         EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
             let t=GetTriggerUnit()
             let a=GetAttacker()
@@ -41,7 +50,30 @@ public class CustomTrigger
             
             if(a.getTypeId() == 'e002' and t.isType(UNIT_TYPE_HERO))
                 CreateUnit(Player(a.getOwner().getId()), t.getTypeId(), pos.x, pos.y, 0)
-                PanCameraToForPlayer(a.getOwner(), pos.x, pos.y)
+                PanCameraToTimedForPlayer(a.getOwner(), pos.x, pos.y,0)
                 RemoveUnit(a)
         
     
+/*
+//===========================================================================
+// Trigger: Untitled Trigger 002
+//===========================================================================
+function Trig_Untitled_Trigger_002_Actions takes nothing returns nothing
+    call CreateTextTagLocBJ("TRIGSTR_029", GetUnitLoc(GetTriggerUnit()), 0, 10, 100, 100, 100, 0)
+    call SetTextTagVelocityBJ(GetLastCreatedTextTag(), 64, 90)
+endfunction
+
+//===========================================================================
+function InitTrig_Untitled_Trigger_002 takes nothing returns nothing
+    set gg_trg_Untitled_Trigger_002=CreateTrigger()
+    call TriggerRegisterAnyUnitEventBJ(gg_trg_Untitled_Trigger_002, EVENT_PLAYER_UNIT_DEATH)
+    call TriggerAddAction(gg_trg_Untitled_Trigger_002, function Trig_Untitled_Trigger_002_Actions)
+endfunction
+
+//===========================================================================
+function InitCustomTriggers takes nothing returns nothing
+    call InitTrig_Untitled_Trigger_001()
+    call InitTrig_ReviveTimer()
+    call InitTrig_Untitled_Trigger_002()
+endfunction
+*/
