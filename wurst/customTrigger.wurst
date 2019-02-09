@@ -1,0 +1,47 @@
+package customTrigger
+import ClosureEvents
+import ClosureTimers
+
+vec2 array creepRespawnPositions
+real array creepRespawnDirection
+real creepRespawnTime = 10.0
+
+public class CustomTrigger
+    static function addInitialTriggers()
+        EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
+            let t = GetTriggerUnit()
+            if(t.getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE)
+                
+                for u in GetUnitsInRangeOfLocAll(1000.0, GetTriggerUnit().getLoc())
+                    if(u.isType(UNIT_TYPE_HERO) and (u.getOwner().getId() != PLAYER_NEUTRAL_AGGRESSIVE))
+                        u.addXp((t.getLevel()*100*(t.getLevel()+10)/max(t.getLevel()+10,u.getLevel())).floor(), true)
+                        u.getOwner().addGold((t.getLevel() + 10) * 5)
+    
+        //creep respawn				
+        //set positions
+        int tmpInt = 1
+        creepRespawnPositions[0]= vec2(0,0)
+        for u in GetUnitsInRectAll(GetPlayableMapRect())
+            if u.getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE
+                creepRespawnPositions[tmpInt]= u.getPos()
+                u.setUserData(tmpInt)
+                tmpInt++
+        //respawn trigger	
+        EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
+            let t=GetTriggerUnit()
+            if(t.getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE and t.getUserData() > 0)
+                doAfter(creepRespawnTime)->
+                    vec2 pos = creepRespawnPositions[t.getUserData()]
+                    CreateUnit(Player(PLAYER_NEUTRAL_AGGRESSIVE), t.getTypeId(), pos.x, pos.y, 0)
+
+        EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
+            let t=GetTriggerUnit()
+            let a=GetAttacker()
+            let pos = gg_rct_Rez_0.randomPoint()
+            
+            if(a.getTypeId() == 'e002' and t.isType(UNIT_TYPE_HERO))
+                CreateUnit(Player(a.getOwner().getId()), t.getTypeId(), pos.x, pos.y, 0)
+                PanCameraToForPlayer(a.getOwner(), pos.x, pos.y)
+                RemoveUnit(a)
+        
+    

@@ -1,20 +1,36 @@
 package Hello
-import ClosureEvents
+import customTrigger
 /* Hello and welcome to Wurst!
 This is just a demo package. 
 You can modify it to tests things out 
 and then later delete it and create your own, new packages.
 Enjoy WurstScript? Consider starring our repo https://github.com/wurstscript/WurstScript */ 
+vec2 array creepRespawnPositions
+real array creepRespawnDirection
+real creepRespawnTime = 10.0
 init
 	print("Hello World")
+	//bounty rewards
+	CustomTrigger.addInitialTriggers()
 
-	EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
-		let t = GetTriggerUnit()
-		if(t.getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE)
-			for u in GetUnitsInRangeOfLocAll(1000.0, GetTriggerUnit().getLoc())
-				if(u.isType(UNIT_TYPE_HERO) and (u.getOwner().getId() != PLAYER_NEUTRAL_AGGRESSIVE))
-					u.addXp(t.getLevel()*10, true)
-					u.getOwner().addGold((t.getLevel() + 10) * 10)
+/*
+//===========================================================================
+// Trigger: RespawnCreeps
+//===========================================================================
+function Trig_RespawnCreeps_Conditions takes nothing returns boolean
+    if ( not ( GetOwningPlayer(GetTriggerUnit()) == Player(PLAYER_NEUTRAL_AGGRESSIVE) ) ) then
+        return false
+    endif
+    if ( not ( GetUnitUserData(GetTriggerUnit()) > 0 ) ) then
+        return false
+    endif
+    return true
+endfunction
 
+function Trig_RespawnCreeps_Actions takes nothing returns nothing
+    call TriggerSleepAction(udg_RespawnTimer)
+    call CreateNUnitsAtLoc(1, GetUnitTypeId(GetTriggerUnit()), Player(PLAYER_NEUTRAL_AGGRESSIVE), udg_Creep_Point[GetUnitUserData(GetTriggerUnit())], bj_UNIT_FACING)
+    call SetUnitUserData(GetLastCreatedUnit(), GetUnitUserData(GetTriggerUnit()))
+endfunction
 
-
+*/
