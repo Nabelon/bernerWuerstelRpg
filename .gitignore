@@ -1,3 +1,6 @@
 /_build
 wurst.dependencies
 .vscode/settings.json
+*.build
+*.dependencies
+*.args
