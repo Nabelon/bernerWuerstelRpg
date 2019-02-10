@@ -11,7 +11,8 @@ public class CustomTrigger
         EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
             let t = GetTriggerUnit()
             if(t.getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE)
-                let gold = (t.getLevel() + 10) * 5
+            
+                let gold = Pow((t.getLevel()).toReal()+4,1.2).toInt()
                 let goldText = CreateTextTagUnitBJ("+"+gold.toString(), t, 0, 10, 90, 85, 0, 0)
                 goldText.setVelocity(0, 0.02)
                 doAfter(2.0)->
@@ -20,7 +21,7 @@ public class CustomTrigger
                 for u in GetUnitsInRangeOfLocAll(1000.0, GetTriggerUnit().getLoc())
                     if(u.isType(UNIT_TYPE_HERO) and (u.getOwner().getId() != PLAYER_NEUTRAL_AGGRESSIVE))
                         
-                        let exp = (t.getLevel()*100*(t.getLevel()+10)/max(t.getLevel()+10,u.getLevel())).floor()
+                        let exp = (t.getLevel()*10*(t.getLevel()+10)/max(t.getLevel()+10,u.getLevel())).floor()
                         u.addXp(exp, true)
                         
                         u.getOwner().addGold(gold)
