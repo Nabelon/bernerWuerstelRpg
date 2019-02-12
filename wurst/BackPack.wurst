@@ -1,0 +1,19 @@
+package BackPack
+
+import ClosureTimers
+import GlobalObjects
+public class BackPack
+    static function repositionBackpack()
+        for i = 0 to GlobalObjects.playerIDsCount
+            let hero = GlobalObjects.playerObjects.get(GlobalObjects.playerIDs[i]).uHero
+            let backPack = GlobalObjects.playerObjects.get(GlobalObjects.playerIDs[i]).uBackpack
+            if ( backPack != null and (hero.getPos().distanceTo(backPack.getPos()) > 800))
+                backPack.setPos(hero.getPos())
+                GlobalObjects.playerObjects.get(GlobalObjects.playerIDs[i]).uBackpack.issueTargetOrder("move",  GlobalObjects.playerObjects.get(GlobalObjects.playerIDs[i]).uHero)
+        doAfter(5.0) ->
+            repositionBackpack()
+
+
+
+
+    

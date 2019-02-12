@@ -1,17 +1,34 @@
-package customTrigger
+package CustomTrigger
+import ChatTrigger
 import ClosureEvents
 import ClosureTimers
-
-vec2 array creepRespawnPositions
-real array creepRespawnDirection
+import HashMap
+import UnitIndexer
+import GlobalObjects
+HashMap<int,CreepRespawnInfo> creepInfo = new HashMap<int,CreepRespawnInfo>()
 real creepRespawnTime = 10.0
 
+public class CreepRespawnInfo
+    function set(vec2 v, angle a)
+        this.v = v
+        this.a = a
+    vec2 v
+    angle a
 public class CustomTrigger
+        
     static function addInitialTriggers()
+
         EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
             let t = GetTriggerUnit()
             if(t.getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE)
-            
+                if(creepInfo.has(t.getIndex()))
+                    doAfter(creepRespawnTime)->
+                        let cInfo = creepInfo.get(t.getIndex())
+                        let c = createUnit(t.getOwner(),t.getTypeId(),cInfo.v,cInfo.a)
+                        creepInfo.put(c.toUnitIndex().getIndex(), creepInfo.get(t.getIndex()))
+                        creepInfo.remove(t.getIndex())
+                       
+                //give bounty
                 let gold = Pow((t.getLevel()).toReal()+4,1.2).toInt()
                 let goldText = CreateTextTagUnitBJ("+"+gold.toString(), t, 0, 10, 90, 85, 0, 0)
                 goldText.setVelocity(0, 0.02)
@@ -19,7 +36,7 @@ public class CustomTrigger
                     goldText.destr()
 
                 for u in GetUnitsInRangeOfLocAll(1000.0, GetTriggerUnit().getLoc())
-                    if(u.isType(UNIT_TYPE_HERO) and (u.getOwner().getId() != PLAYER_NEUTRAL_AGGRESSIVE))
+                    if(u.isType(UNIT_TYPE_HERO) and (u.getOwner().getId() != PLAYER_NEUTRAL_AGGRESSIVE) and u.isAlive() and u.getTypeId() != 'N00B')
                         
                         let exp = (t.getLevel()*10*(t.getLevel()+10)/max(t.getLevel()+10,u.getLevel())).floor()
                         u.addXp(exp, true)
@@ -29,24 +46,26 @@ public class CustomTrigger
                         expText.setVelocity(0, 0.02)
                         doAfter(2.0)->
                             expText.destr()
-                        
-        //creep respawn				
+            if(t.isType(UNIT_TYPE_HERO) and t.getOwner().getId() != PLAYER_NEUTRAL_AGGRESSIVE)
+                //revive hero
+                let ti = CreateTimer()
+                real reviveTime = 5 + Pow(t.getLevel().toReal(),0.5)
+                StartTimerBJ(ti, false, reviveTime)
+                let tiDialog = CreateTimerDialogBJ(ti,t.getOwner().getName() + "revives in ")
+                doAfter(reviveTime)->
+                    DestroyTimerDialog(tiDialog)
+                    ReviveHero(t, gg_rct_Rez_0.getCenter().x, gg_rct_Rez_0.getCenter().y, true)
+                
+
+        
+        //creep respawn			
         //set positions
-        int tmpInt = 1
-        creepRespawnPositions[0]= vec2(0,0)
         for u in GetUnitsInRectAll(GetPlayableMapRect())
             if u.getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE
-                creepRespawnPositions[tmpInt]= u.getPos()
-                u.setUserData(tmpInt)
-                tmpInt++
-        //respawn trigger	
-        EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
-            let t=GetTriggerUnit()
-            if(t.getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE and t.getUserData() > 0)
-                doAfter(creepRespawnTime)->
-                    vec2 pos = creepRespawnPositions[t.getUserData()]
-                    let u = CreateUnit(Player(PLAYER_NEUTRAL_AGGRESSIVE), t.getTypeId(), pos.x, pos.y, 0)
-                    u.setUserData(t.getUserData())
+                let c = new CreepRespawnInfo()
+                c.set(u.getPos(), u.getFacingAngle())
+                creepInfo.put(u.toUnitIndex().getIndex(), c)
+                
         //select hero
         EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
             let t=GetTriggerUnit()
@@ -54,31 +73,17 @@ public class CustomTrigger
             let pos = gg_rct_Rez_0.randomPoint()
             
             if(a.getTypeId() == 'e002' and t.isType(UNIT_TYPE_HERO))
-                CreateUnit(Player(a.getOwner().getId()), t.getTypeId(), pos.x, pos.y, 0)
+                unit u = CreateUnit(Player(a.getOwner().getId()), t.getTypeId(), pos.x, pos.y, 0)
+                GlobalObjects.playerObjects.get(a.getOwner().getId()).uHero = u
+                u = CreateUnit(Player(a.getOwner().getId()), 'N00B', pos.x, pos.y, 0)
+                u.setPathing(false)
+                GlobalObjects.playerObjects.get(a.getOwner().getId()).uBackpack = u
                 PanCameraToTimedForPlayer(a.getOwner(), pos.x, pos.y,0)
                 RemoveUnit(a)
-        
+        //all chat trigger
+        EventListener.add(EVENT_PLAYER_CHAT_FILTER) ->
+            let input = GetEventPlayerChatString()
+            let p = GetTriggerPlayer()
+            ChatTrigger.chatMessage(input, p)
+
     
-/*
-//===========================================================================
-// Trigger: Untitled Trigger 002
-//===========================================================================
-function Trig_Untitled_Trigger_002_Actions takes nothing returns nothing
-    call CreateTextTagLocBJ("TRIGSTR_029", GetUnitLoc(GetTriggerUnit()), 0, 10, 100, 100, 100, 0)
-    call SetTextTagVelocityBJ(GetLastCreatedTextTag(), 64, 90)
-endfunction
-
-//===========================================================================
-function InitTrig_Untitled_Trigger_002 takes nothing returns nothing
-    set gg_trg_Untitled_Trigger_002=CreateTrigger()
-    call TriggerRegisterAnyUnitEventBJ(gg_trg_Untitled_Trigger_002, EVENT_PLAYER_UNIT_DEATH)
-    call TriggerAddAction(gg_trg_Untitled_Trigger_002, function Trig_Untitled_Trigger_002_Actions)
-endfunction
-
-//===========================================================================
-function InitCustomTriggers takes nothing returns nothing
-    call InitTrig_Untitled_Trigger_001()
-    call InitTrig_ReviveTimer()
-    call InitTrig_Untitled_Trigger_002()
-endfunction
-*/

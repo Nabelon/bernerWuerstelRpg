@@ -1,0 +1,38 @@
+package ChatTrigger
+import GlobalObjects
+public class ChatTrigger
+    static bool debugMode = true
+    static function chatMessage(string m, player p)
+        if(m.startsWith("-cam "))    
+            setCamera(m, p)    
+        if(m == "-roll")
+            print(p.getName() +" rolled "+GetRandomInt(0,100).toString())
+        if(m == "-suicide")
+            suicidePlayer(p)
+
+        //Debug commands    
+        if(not debugMode)
+            return
+        if(m.startsWith("-setLevel "))
+            GlobalObjects.playerObjects.get(p.getId()).uHero.setLevel(m.rtrim().substring(m.lastIndexOf(" "), m.length()).toInt(), true)
+
+        if(m.startsWith("-addGold "))
+            p.addGold(m.rtrim().substring(m.lastIndexOf(" "), m.length()).toInt())
+        if(m.startsWith("-addLumber "))
+            p.addLumber(m.rtrim().substring(m.lastIndexOf(" "), m.length()).toInt())
+        if(m.startsWith("-tp "))
+            GlobalObjects.playerObjects.get(p.getId()).uHero.setPos(
+                m.rtrim().substring(m.indexOf(" "), m.lastIndexOf(" ")).toInt().toReal(),
+                m.rtrim().substring(m.lastIndexOf(" "), m.length()).toReal())
+
+    private static function setCamera(string m, player p)
+        if not m.contains(" ")
+            return
+            
+        real zoom = m.rtrim().substring(m.lastIndexOf(" "), m.length()).toInt().toReal()
+        zoom = (zoom > 1500) ? 1500 : ((zoom < 20) ? 20 : zoom)
+        p.setCameraField(CAMERA_FIELD_ZOFFSET, zoom, 0.1)
+        
+    private static function suicidePlayer(player p)
+        GlobalObjects.playerObjects.get(p.getId()).uHero.kill()
+    
