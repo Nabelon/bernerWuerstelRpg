@@ -1,5 +1,7 @@
 package ChatTrigger
 import GlobalObjects
+import ClosureEvents
+import ClosureForGroups
 public class ChatTrigger
     static bool debugMode = true
     static function chatMessage(string m, player p)
@@ -9,21 +11,27 @@ public class ChatTrigger
             print(p.getName() +" rolled "+GetRandomInt(0,100).toString())
         if(m == "-suicide")
             suicidePlayer(p)
-
+        if(m=="-repick")
+            repick(p)
         //Debug commands    
         if(not debugMode)
             return
         if(m.startsWith("-setLevel "))
+            print ("Set level of " + GlobalObjects.playerObjects.get(p.getId()).uHero.getName() + " ("+p.getName()+")")
             GlobalObjects.playerObjects.get(p.getId()).uHero.setLevel(m.rtrim().substring(m.lastIndexOf(" "), m.length()).toInt(), true)
 
         if(m.startsWith("-addGold "))
+            print("Gave gold to " + p.getName())
             p.addGold(m.rtrim().substring(m.lastIndexOf(" "), m.length()).toInt())
         if(m.startsWith("-addLumber "))
+            print("Gave lumber to " + p.getName())
             p.addLumber(m.rtrim().substring(m.lastIndexOf(" "), m.length()).toInt())
         if(m.startsWith("-tp "))
+            print("Teleported "  + p.getName() + "'s hero")
             GlobalObjects.playerObjects.get(p.getId()).uHero.setPos(
                 m.rtrim().substring(m.indexOf(" "), m.lastIndexOf(" ")).toInt().toReal(),
-                m.rtrim().substring(m.lastIndexOf(" "), m.length()).toReal())
+                m.rtrim().substring(m.lastIndexOf(" "), m.length()).toInt().toReal())
+
 
     private static function setCamera(string m, player p)
         if not m.contains(" ")
@@ -35,4 +43,10 @@ public class ChatTrigger
         
     private static function suicidePlayer(player p)
         GlobalObjects.playerObjects.get(p.getId()).uHero.kill()
-    
+    private static function repick(player p)
+        forUnitsOfPlayer(p) u->
+            u.remove()
+        createUnit(p,'e002',gg_rct_SelectHeroArea.getCenter(), angle(0.0))
+        p.setLumber(0)
+        p.setGold(0)
+        //TODO: remove all items

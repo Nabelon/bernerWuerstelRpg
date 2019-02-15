@@ -4,3 +4,4 @@ wurst.dependencies
 *.dependencies
 *.args
 *.build
+wurst/war3map.j

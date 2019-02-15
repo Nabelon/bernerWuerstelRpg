@@ -3,6 +3,8 @@ import CustomTrigger
 import GlobalObjects
 import ClosureTimers
 import BackPack
+import Spells
+import Quests
 /* Hello and welcome to Wurst!
 This is just a demo package. 
 You can modify it to tests things out 
@@ -16,6 +18,8 @@ init
     doAfter(5.0) ->
         BackPack.repositionBackpack()
 
+    Spells.initiate()
+    QuestManager.initiate()
 /*
 //===========================================================================
 // Trigger: RespawnCreeps

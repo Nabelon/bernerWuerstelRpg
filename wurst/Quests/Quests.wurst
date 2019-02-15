@@ -1,0 +1,129 @@
+package Quests
+import public Assets
+import ClosureEvents
+import HashMap
+import LinkedList
+import GlobalObjects
+
+
+public class QuestManager
+    static HashMap<int,LinkedList<Quest>> killUnitQuests
+    static HashMap<int,LinkedList<Quest>> talkToUnitQuests
+    static HashMap<int,LinkedList<Quest>> pickupItemQuests
+
+    static function initiate() 
+        killUnitQuests = new HashMap<int, LinkedList<Quest>>()
+        talkToUnitQuests = new HashMap<int, LinkedList<Quest>>()
+        pickupItemQuests = new HashMap<int, LinkedList<Quest>>()
+        EventListener.add(EVENT_PLAYER_UNIT_PICKUP_ITEM) ->
+            let i = GetManipulatedItem()
+            let u = GetTriggerUnit()
+            let quests = pickupItemQuests.get(i.getTypeId())
+            Quest qTmp = tryCreateQuest(i.getTypeId(),u.getOwner())
+            if quests != null
+                for q in quests
+                    if(q!=qTmp) 
+                        q.itemPickUp(i,u.getOwner())
+
+
+        EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
+            unit u = GetTriggerUnit()
+            let quests = killUnitQuests.get(u.getTypeId())
+            if quests != null
+                for q in quests
+                    q.unitKilled(u)
+            
+        EventListener.add(EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER) ->
+            unit talker = GetTriggerUnit()
+            unit target = GetOrderTargetUnit()
+            let quests = talkToUnitQuests.get(target.getTypeId())
+            if quests != null
+                for q in quests
+                    q.unitTalkTo(target, talker)
+
+
+        
+    static function addQuestToKillUnitQuests(Quest q, int uId)
+        if not killUnitQuests.has(uId)
+            killUnitQuests.put(uId,new LinkedList<Quest>()..push(q))
+        else
+            killUnitQuests.get(uId).push(q)
+
+            
+    static function addQuestToTalkToUnitQuests(Quest q, int uId)
+        if not talkToUnitQuests.has(uId)
+            talkToUnitQuests.put(uId,new LinkedList<Quest>()..push(q))
+        else
+            talkToUnitQuests.get(uId).push(q)
+   
+    static function addQuestToPickupItemQuests(Quest q, int uId)
+        if not talkToUnitQuests.has(uId)
+            pickupItemQuests.put(uId,new LinkedList<Quest>()..push(q))
+        else
+            pickupItemQuests.get(uId).push(q)
+    
+    static function tryCreateQuest(int iId, player p) returns Quest
+        switch iId
+            case 'I005' 
+                return new KillUnits('n001',5,'n008',iId,"Kill Bandits")..initiate(p)
+        return null
+public abstract class Quest
+    abstract function initiate(player p)
+    abstract function unitKilled(unit u)
+    abstract function itemPickUp(item i, player p)
+    abstract function unitTalkTo(unit target, unit talker)
+    function printQuestUpdate(string s, vec2 v, real radius)
+        for pId in GlobalObjects.playerIDs
+            if(v.inRange(GlobalObjects.playerObjects.get(pId).uHero.getPos(), radius))
+                printTimedToPlayer(s, 5, players[pId])
+
+public class KillUnits extends Quest
+    int unitTypeId
+    int killsNeeded        
+    int killCount
+    int questCompleterTypeID
+    int questCompleterItemID
+    string questObjective
+    construct(int unitTypeId, int killsNeeded, int questCompleterTypeID, int questCompleterItemID, string questObjective)
+        this.unitTypeId = unitTypeId
+        this.killsNeeded = killsNeeded
+        this.questCompleterTypeID  = questCompleterTypeID
+        this.questCompleterItemID = questCompleterItemID
+        killCount = 0
+        this.questObjective = questObjective
+    override function initiate(player p)
+        if not QuestManager.killUnitQuests.get(unitTypeId) == null
+            for q in QuestManager.killUnitQuests.get(unitTypeId)
+                if q instanceof KillUnits
+                    return
+        killCount = 0
+        printQuestUpdate("Quest Started: " + questObjective, GlobalObjects.playerObjects.get(p.getId()).uHero.getPos(),10)
+        QuestManager.addQuestToKillUnitQuests(this, unitTypeId)
+        QuestManager.addQuestToTalkToUnitQuests(this, questCompleterTypeID)
+        QuestManager.addQuestToPickupItemQuests(this, questCompleterItemID)
+
+    override function unitKilled(unit u)
+        killCount++
+        if(killCount <= killsNeeded)
+            printQuestUpdate(questObjective + " : " + killCount.toString() + "/" +  killsNeeded.toString() , u.getPos(), 2000)
+    override function unitTalkTo(unit target, unit talker)
+        if not target.getPos().inRange(talker.getPos(), 500.0)
+            return
+        if(killCount >= killsNeeded)
+        
+            printTimed("Quest Completed: " + questObjective,10)
+            for pId in GlobalObjects.playerIDs
+                GlobalObjects.playerObjects.get(pId).uHero.addXp(1000, true)
+            QuestManager.killUnitQuests.get(unitTypeId).remove(this)
+            QuestManager.talkToUnitQuests.get(questCompleterTypeID).remove(this)
+            QuestManager.pickupItemQuests.get(questCompleterItemID).remove(this)
+    override function itemPickUp(item i, player p)
+        if(killsNeeded >= killCount)
+            printTimedToPlayer("Quest already started! Progress: " +killCount.toString() + "/" +  killsNeeded.toString(), 10.0, p)
+        else
+            printTimed("Quest Completed: " + questObjective,10)
+            for pId in GlobalObjects.playerIDs
+                GlobalObjects.playerObjects.get(pId).uHero.addXp(1000, true)
+            QuestManager.killUnitQuests.get(unitTypeId).remove(this)
+            QuestManager.talkToUnitQuests.get(questCompleterTypeID).remove(this)
+            QuestManager.pickupItemQuests.get(questCompleterItemID).remove(this)

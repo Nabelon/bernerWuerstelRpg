@@ -1,0 +1,25 @@
+package Comet
+
+
+import public BuffObjEditing
+import ClosureTimers
+import ClosureEvents
+import public Assets
+import ClosureForGroups
+import SpellText
+
+
+
+public class Comet
+    static let SPELL_EFFECT_PATH = Abilities.flameStrike
+    static function initiate()
+        EventListener.onPointCast('A005') (caster, tpos) ->
+            flashEffect(SPELL_EFFECT_PATH, tpos)
+            doAfter(2.0) ->
+                print ("damage deal!")
+                let inteligence = caster.getInt(true)
+                forUnitsInRange(tpos, 200) u ->
+                    if not caster.getOwner().isAllyOf(u.getOwner())
+                        let damage = inteligence * (2+ 0.5+GetSpellAbilityUnit().getAbilityLevel(GetSpellAbilityId()))
+                        caster.damageTarget(u, damage)
+                        SpellText.showSpellDamageText(damage.toInt().toString(), u)

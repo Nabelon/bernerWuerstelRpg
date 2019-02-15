@@ -1,19 +1,17 @@
 package GlobalObjects
 import HashMap
-
+import LinkedList
 public class GlobalObjects
     static HashMap<int, PlayerObject> playerObjects
-    static int array playerIDs
-    static int playerIDsCount
+    static LinkedList<int> playerIDs
 
     static function initiate()
         playerObjects = new HashMap<int,PlayerObject>()
-        playerIDsCount=0
+        playerIDs = new LinkedList<int>()
         for i = 0 to 24
             if(players[i].getSlotState().getHandleId() == 1)
                 playerObjects.put(players[i].getId(), new PlayerObject())
-                playerIDs[playerIDsCount] = players[i].getId()
-                playerIDsCount++
+                playerIDs.add(players[i].getId())
 
 
 

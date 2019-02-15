@@ -1,0 +1,11 @@
+package SpellText
+import ClosureTimers
+public class SpellText
+    
+    static function showSpellDamageText(string s, unit u)
+        print ("show damage")
+        //show dmg value    
+        let damage = CreateTextTagUnitBJ(s, u, 0, 12, 50, 0, 100, 0.2)
+        damage.setVelocity(0.005, 0.03)
+        doAfter(1.0)->
+            damage.destr()

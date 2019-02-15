@@ -1,0 +1,9 @@
+package Spells
+import Comet
+public class Spells
+    
+    static function initiate()
+        Comet.initiate()
+
+
+       
