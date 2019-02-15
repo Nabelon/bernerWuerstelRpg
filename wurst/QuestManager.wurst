@@ -1,10 +1,9 @@
-package Quests
+package QuestManager
 import public Assets
 import ClosureEvents
 import HashMap
 import LinkedList
 import GlobalObjects
-
 
 public class QuestManager
     static HashMap<int,LinkedList<Quest>> killUnitQuests
@@ -28,10 +27,11 @@ public class QuestManager
 
         EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
             unit u = GetTriggerUnit()
+            unit k = GetKillingUnitBJ()
             let quests = killUnitQuests.get(u.getTypeId())
             if quests != null
                 for q in quests
-                    q.unitKilled(u)
+                    q.unitKilled(u,k)
             
         EventListener.add(EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER) ->
             unit talker = GetTriggerUnit()
@@ -64,12 +64,14 @@ public class QuestManager
     
     static function tryCreateQuest(int iId, player p) returns Quest
         switch iId
+            case 'I006' 
+                return new KillUnits('n001',15,'n008',iId,"Kill Bandits",0,15,1000,200)..initiate(p)
             case 'I005' 
-                return new KillUnits('n001',5,'n008',iId,"Kill Bandits")..initiate(p)
+                return new KillUnits('n009',10,'n008',iId,"Kill Paladins",10,30,1500,0)..initiate(p)
         return null
 public abstract class Quest
     abstract function initiate(player p)
-    abstract function unitKilled(unit u)
+    abstract function unitKilled(unit u, unit killer)
     abstract function itemPickUp(item i, player p)
     abstract function unitTalkTo(unit target, unit talker)
     function printQuestUpdate(string s, vec2 v, real radius)
@@ -83,26 +85,43 @@ public class KillUnits extends Quest
     int killCount
     int questCompleterTypeID
     int questCompleterItemID
+    int minLevel
+    int maxLevel
+    int expReward
+    int goldReward
     string questObjective
-    construct(int unitTypeId, int killsNeeded, int questCompleterTypeID, int questCompleterItemID, string questObjective)
+    construct(int unitTypeId, int killsNeeded, int questCompleterTypeID, int questCompleterItemID, string questObjective,
+                int minLevel, int maxLevel, int expReward, int goldReward)
         this.unitTypeId = unitTypeId
         this.killsNeeded = killsNeeded
         this.questCompleterTypeID  = questCompleterTypeID
         this.questCompleterItemID = questCompleterItemID
         killCount = 0
         this.questObjective = questObjective
+        this.minLevel = minLevel
+        this.maxLevel = maxLevel
+        this.expReward = expReward
+        this.goldReward = goldReward
     override function initiate(player p)
         if not QuestManager.killUnitQuests.get(unitTypeId) == null
             for q in QuestManager.killUnitQuests.get(unitTypeId)
                 if q instanceof KillUnits
                     return
+        int hLevel = GlobalObjects.playerObjects.get(p.getId()).uHero.getLevel()
+        if(hLevel > maxLevel or hLevel < minLevel)
+            printTimedToPlayer("Not in level range: " + minLevel.toString() + "-" + maxLevel.toString(), 10, p)
+            return
         killCount = 0
         printQuestUpdate("Quest Started: " + questObjective, GlobalObjects.playerObjects.get(p.getId()).uHero.getPos(),10)
         QuestManager.addQuestToKillUnitQuests(this, unitTypeId)
         QuestManager.addQuestToTalkToUnitQuests(this, questCompleterTypeID)
         QuestManager.addQuestToPickupItemQuests(this, questCompleterItemID)
 
-    override function unitKilled(unit u)
+    override function unitKilled(unit u, unit killer)
+        
+        int hLevel = GlobalObjects.playerObjects.get(killer.getOwner().getId()).uHero.getLevel()
+        if(hLevel > maxLevel or hLevel < minLevel)
+            return
         killCount++
         if(killCount <= killsNeeded)
             printQuestUpdate(questObjective + " : " + killCount.toString() + "/" +  killsNeeded.toString() , u.getPos(), 2000)
@@ -123,7 +142,10 @@ public class KillUnits extends Quest
         else
             printTimed("Quest Completed: " + questObjective,10)
             for pId in GlobalObjects.playerIDs
-                GlobalObjects.playerObjects.get(pId).uHero.addXp(1000, true)
+                unit hero = GlobalObjects.playerObjects.get(pId).uHero
+                if(hero.getLevel() <= maxLevel and hero.getLevel() >= minLevel)
+                    hero.addXp(expReward, true)
+                    hero.getOwner().addGold(goldReward)
             QuestManager.killUnitQuests.get(unitTypeId).remove(this)
             QuestManager.talkToUnitQuests.get(questCompleterTypeID).remove(this)
             QuestManager.pickupItemQuests.get(questCompleterItemID).remove(this)
