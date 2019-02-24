@@ -4,6 +4,7 @@ import ClosureEvents
 import ClosureTimers
 import HashMap
 import UnitIndexer
+import Drops
 import GlobalObjects
 HashMap<int,CreepRespawnInfo> creepInfo = new HashMap<int,CreepRespawnInfo>()
 real creepRespawnTime = 10.0
@@ -22,12 +23,14 @@ public class CustomTrigger
             let t = GetTriggerUnit()
             if(t.getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE)
                 if(creepInfo.has(t.getIndex()))
+                    Drops.dropItem(t)
                     doAfter(creepRespawnTime)->
                         let cInfo = creepInfo.get(t.getIndex())
                         let c = createUnit(t.getOwner(),t.getTypeId(),cInfo.v,cInfo.a)
                         creepInfo.put(c.toUnitIndex().getIndex(), creepInfo.get(t.getIndex()))
                         creepInfo.remove(t.getIndex())
                         t.remove()
+
                        
                 //give bounty
                 let gold = Pow((t.getLevel()).toReal()+4,1.2).toInt()

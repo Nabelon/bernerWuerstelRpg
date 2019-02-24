@@ -1,0 +1,18 @@
+package CreepAI
+import ClosureEvents
+import Abilities
+import DummyCaster
+import OrderIds
+
+public class CreepAI
+    static function initiate() 
+        EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
+            let t = GetTriggerUnit()
+            let a = GetAttacker()
+
+            let d = new DummyCaster()
+            
+            d.owner(PLAYER_COLOR_BLACK_AGGRESSIVE.getPlayer())
+            d.origin(t.getPos())
+            print("cast spell")
+            d.castImmediate('A00F', 1, OrderIds.thunderclap)

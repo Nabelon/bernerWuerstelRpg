@@ -1,0 +1,52 @@
+package Drops
+import HashMap
+import GlobalObjects
+public class Drops
+    static HashMap<int,IterableMap<int,real>> creepDrops       //drop max 1 item
+    static HashMap<int,IterableMap<int,real>> bossDrops        //drop max 1 item per player
+    static function initiate() 
+        creepDrops = new HashMap<int,IterableMap<int,real>>()
+        bossDrops = new HashMap<int,IterableMap<int,real>>()
+        addFirstAreaDrops()
+        
+    static function dropItem(unit u)
+        if creepDrops.has(u.getTypeId())
+            item i = createItem(getRandomItem(creepDrops.get(u.getTypeId())), u.getPos())
+        if bossDrops.has(u.getTypeId())
+            for p in GlobalObjects.playerObjects
+                if GlobalObjects.playerObjects.get(p).uHero.getPos().inRange(u.getPos(), 1000)
+                    item i = createItem(getRandomItem(creepDrops.get(u.getTypeId())), u.getPos())
+                    
+    static private function getRandomItem(IterableMap<int,real> m) returns int
+        real random = GetRandomReal(0,1)
+        real sum = 0
+        for itemId in m
+            sum += m.get(itemId)
+            if(sum > random)
+                return itemId
+
+        return 0
+    
+    private static function addFirstAreaDrops()
+        //noob bandits
+        IterableMap<int,real> m = new IterableMap<int,real>()
+        m.put('I00A',0.03) //boots
+        m.put('I007',0.03) //ring
+        m.put('I009',0.03) //staff
+        m.put('I008',0.03) //mask
+        m.put('I004',0.03) //armor
+        m.put('I003',0.03) //dagger
+        creepDrops.put('n001', m)
+        creepDrops.put('n000', m)
+        creepDrops.put('n007', m)
+
+        //mage/pala
+        m = new IterableMap<int,real>()
+        m.put('I00B',0.02) //boots rare
+        m.put('I00C',0.02) //ring rare
+        m.put('I00D',0.02) //staff rare
+        m.put('I00E',0.02) //mask rare
+        m.put('I00F',0.02) //armor rare
+        m.put('I00G',0.02) //dagger rare
+        creepDrops.put('n009', m)
+        creepDrops.put('n00E', m)

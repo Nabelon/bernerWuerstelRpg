@@ -5,14 +5,15 @@ import ClosureTimers
 import BackPack
 import Spells
 import QuestManager
+import Drops
 /* Hello and welcome to Wurst!
 This is just a demo package. 
 You can modify it to tests things out 
 and then later delete it and create your own, new packages.
 Enjoy WurstScript? Consider starring our repo https://github.com/wurstscript/WurstScript */ 
 init
-	print("Select a hero by attacking it")
-	//bounty rewards
+    print("Select a hero by attacking it")
+    //bounty rewards
     CustomTrigger.addInitialTriggers()
     GlobalObjects.initiate()
     doAfter(5.0) ->
@@ -20,6 +21,8 @@ init
 
     Spells.initiate()
     QuestManager.initiate()
+    Drops.initiate()
+    //CreepAI.initiate()
 /*
 //===========================================================================
 // Trigger: RespawnCreeps
