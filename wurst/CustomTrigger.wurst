@@ -21,7 +21,7 @@ public class CustomTrigger
 
         EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
             let t = GetTriggerUnit()
-            if(t.getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE)
+            if(t.getOwner().getId() == PLAYER_COLOR_BROWN.getPlayer().getId())
                 if(creepInfo.has(t.getIndex()))
                     Drops.dropItem(t)
                     doAfter(creepRespawnTime)->
@@ -40,7 +40,7 @@ public class CustomTrigger
                     goldText.destr()
 
                 for u in GetUnitsInRangeOfLocAll(1000.0, GetTriggerUnit().getLoc())
-                    if(u.isType(UNIT_TYPE_HERO) and (u.getOwner().getId() != PLAYER_NEUTRAL_AGGRESSIVE) and u.isAlive() and u.getTypeId() != 'N00B')
+                    if(u.isType(UNIT_TYPE_HERO) and (u.getOwner().getId() != PLAYER_COLOR_BROWN.getPlayer().getId()) and u.isAlive() and u.getTypeId() != 'N00B')
                         
                         let exp = (t.getLevel()*10*(t.getLevel()+10)/max(t.getLevel()+10,u.getLevel())).floor()
                         u.addXp(exp, true)
@@ -50,7 +50,7 @@ public class CustomTrigger
                         expText.setVelocity(0, 0.02)
                         doAfter(2.0)->
                             expText.destr()
-            if(t.isType(UNIT_TYPE_HERO) and t.getOwner().getId() != PLAYER_NEUTRAL_AGGRESSIVE)
+            if(t.isType(UNIT_TYPE_HERO) and t.getOwner().getId() != PLAYER_COLOR_BROWN.getPlayer().getId())
                 //revive hero
                 let ti = CreateTimer()
                 real reviveTime = 5 + Pow(t.getLevel().toReal(),0.5)
@@ -66,7 +66,7 @@ public class CustomTrigger
         //creep respawn			
         //set positions
         for u in GetUnitsInRectAll(GetPlayableMapRect())
-            if u.getOwner().getId() == PLAYER_NEUTRAL_AGGRESSIVE
+            if u.getOwner().getId() == PLAYER_COLOR_BROWN.getPlayer().getId()
                 let c = new CreepRespawnInfo()
                 c.set(u.getPos(), u.getFacingAngle())
                 creepInfo.put(u.toUnitIndex().getIndex(), c)

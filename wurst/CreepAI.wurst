@@ -3,7 +3,7 @@ import ClosureEvents
 import Abilities
 import DummyCaster
 import OrderIds
-
+import HashMap 
 public class CreepAI
     static function initiate() 
         EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
