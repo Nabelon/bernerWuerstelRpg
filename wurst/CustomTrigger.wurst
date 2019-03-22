@@ -7,7 +7,7 @@ import UnitIndexer
 import Drops
 import GlobalObjects
 HashMap<int,CreepRespawnInfo> creepInfo = new HashMap<int,CreepRespawnInfo>()
-real creepRespawnTime = 10.0
+real creepRespawnTime = 30.0
 
 public class CreepRespawnInfo
     function set(vec2 v, angle a)
