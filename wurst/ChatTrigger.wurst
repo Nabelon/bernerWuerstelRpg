@@ -1,6 +1,5 @@
 package ChatTrigger
 import GlobalObjects
-import ClosureEvents
 import ClosureForGroups
 public class ChatTrigger
     static bool debugMode = true
