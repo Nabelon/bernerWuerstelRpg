@@ -6,9 +6,11 @@ import HashMap
 import UnitIndexer
 import Drops
 import GlobalObjects
+import LinkedList
 HashMap<int,CreepRespawnInfo> creepInfo = new HashMap<int,CreepRespawnInfo>()
 real creepRespawnTime = 30.0
-
+LinkedList<string> itemSlots = new LinkedList<string>()..add("Body Armor")..add("Helmet")..add("Off-Hand")
+    ..add("Boots")..add("Main-Hand")..add("Accessory")..add("Wings")
 public class CreepRespawnInfo
     function set(vec2 v, angle a)
         this.v = v
@@ -85,6 +87,21 @@ public class CustomTrigger
                 GlobalObjects.playerObjects.get(a.getOwner().getId()).uBackpack = u
                 PanCameraToTimedForPlayer(a.getOwner(), pos.x, pos.y,0)
                 RemoveUnit(a)
+                
+        //only one item for each item slot
+        EventListener.add(EVENT_PLAYER_UNIT_PICKUP_ITEM) ->
+            let t = GetTriggerUnit()
+            let i = GetManipulatedItem()
+            
+            if(t.getOwner().getColor() != PLAYER_COLOR_BROWN and t.getTypeId() != 'N00B')
+                for slot in itemSlots
+                    let tmp = slot + "|r, "
+                    if i.getDescription().contains(tmp)
+                        for itmp in t.inventory()
+                            if(itmp.getDescription().contains(tmp) and itmp != i)
+                                t.removeItem(i)
+                                i.setPos(t.getPos())
+
                 
         //all chat trigger
         EventListener.add(EVENT_PLAYER_CHAT_FILTER) ->
