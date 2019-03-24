@@ -42,7 +42,7 @@ public class CustomTrigger
                     goldText.destr()
 
                 for u in GetUnitsInRangeOfLocAll(1000.0, GetTriggerUnit().getLoc())
-                    if(u.isType(UNIT_TYPE_HERO) and (u.getOwner().getColor() != PLAYER_COLOR_BROWN and t.getOwner().getColor() != PLAYER_COLOR_BLACK_AGGRESSIVE) and u.isAlive() and u.getTypeId() != 'N00B')
+                    if(u.isType(UNIT_TYPE_HERO) and (u.getOwner().getColor() != PLAYER_COLOR_BROWN and u.getOwner().getColor() != PLAYER_COLOR_BLACK_AGGRESSIVE) and u.isAlive() and u.getTypeId() != 'N00B')
                         
                         let exp = (t.getLevel()*10*(t.getLevel()+10)/max(t.getLevel()+10,u.getLevel())).floor()
                         u.addXp(exp, true)
