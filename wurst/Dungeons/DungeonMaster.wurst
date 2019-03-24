@@ -12,7 +12,7 @@ public class DungeonMaster
         for r in dungeonEntrancesToStart
             if GlobalObjects.playerObjects.get(p.getId()).uHero.getPos().isInRect(r)
                 for u in GetUnitsInRectAll(dungeonEntrancesToArea.get(r))
-                    if(u.getOwner().getColor() != PLAYER_COLOR_BROWN)
+                    if(u.getOwner().getColor() != PLAYER_COLOR_BROWN and u.getOwner().getColor() != PLAYER_COLOR_BLACK_AGGRESSIVE)
                         printTimedToPlayer("Someone is already in the dungeon!", 10, p)
                         return
                 for u in GetUnitsInRectAll(r)
