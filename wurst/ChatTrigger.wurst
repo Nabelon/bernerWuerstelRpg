@@ -1,6 +1,7 @@
 package ChatTrigger
 import GlobalObjects
 import ClosureForGroups
+import DungeonMaster
 public class ChatTrigger
     static bool debugMode = true
     static function chatMessage(string m, player p)
@@ -30,6 +31,8 @@ public class ChatTrigger
             GlobalObjects.playerObjects.get(p.getId()).uHero.setPos(
                 m.rtrim().substring(m.indexOf(" "), m.lastIndexOf(" ")).toInt().toReal(),
                 m.rtrim().substring(m.lastIndexOf(" "), m.length()).toInt().toReal())
+        if(m == "-enter")
+            enterDungeon(p)
 
 
     private static function setCamera(string m, player p)
@@ -49,3 +52,5 @@ public class ChatTrigger
         p.setLumber(0)
         p.setGold(0)
         //TODO: remove all items
+    private static function enterDungeon(player p)
+        DungeonMaster.playerWantsToEnter(p)
