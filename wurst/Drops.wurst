@@ -15,7 +15,7 @@ public class Drops
         if bossDrops.has(u.getTypeId())
             for p in GlobalObjects.playerObjects
                 if GlobalObjects.playerObjects.get(p).uHero.getPos().inRange(u.getPos(), 1000)
-                    item i = createItem(getRandomItem(creepDrops.get(u.getTypeId())), u.getPos())
+                    item i = createItem(getRandomItem(bossDrops.get(u.getTypeId())), u.getPos())
                     
     static private function getRandomItem(IterableMap<int,real> m) returns int
         real random = GetRandomReal(0,1)
