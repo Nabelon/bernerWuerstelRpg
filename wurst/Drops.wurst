@@ -31,21 +31,37 @@ public class Drops
         IterableMap<int,real> m = new IterableMap<int,real>()
         m.put('I00A',0.02) //boots
         m.put('I007',0.02) //ring
-        m.put('I009',0.02) //staff
-        m.put('I008',0.02) //mask
+        m.put('I009',0.02) //main-hand staff
+        m.put('I008',0.02) //helmet
         m.put('I004',0.02) //armor
-        m.put('I003',0.02) //dagger
+        m.put('I003',0.02) //main-hand axe
+        m.put('I00H',0.02) //off-hand int
+        m.put('I00J',0.02) //off-hand agi
         creepDrops.put('n001', m)
         creepDrops.put('n000', m)
         creepDrops.put('n007', m)
 
         //mage/pala
         m = new IterableMap<int,real>()
-        m.put('I00B',0.015) //boots rare
-        m.put('I00C',0.015) //ring rare
-        m.put('I00D',0.015) //staff rare
-        m.put('I00E',0.015) //mask rare
-        m.put('I00F',0.015) //armor rare
-        m.put('I00G',0.015) //dagger rare
+        m.put('I00B',0.015) //boots uncommon
+        m.put('I00C',0.015) //ring uncommon
+        m.put('I00D',0.015) //off-hand staff uncommon
+        m.put('I00E',0.015) //helmet uncommon
+        m.put('I00F',0.015) //armor uncommon
+        m.put('I00G',0.015) //main-hand axe uncommon
+        m.put('I00I',0.015) //off-hand int uncommon
+        m.put('I00K',0.015) //off-hand agi uncommon
         creepDrops.put('n009', m)
         creepDrops.put('n00E', m)
+
+        //G01DungeonBoss
+        m = new IterableMap<int,real>()
+        m.put('I00L',0.125) //boots rare
+        m.put('I00N',0.125) //ring rare
+        m.put('I00Q',0.125) //off-hand staff rare
+        m.put('I00M',0.125) //helmet rare
+        m.put('I00R',0.125) //armor rare
+        m.put('I00S',0.125) //main-hand axe rare
+        m.put('I00P',0.125) //off-hand int rare
+        m.put('I00O',0.125) //off-hand agi rare
+        bossDrops.put('N00J', m)
