@@ -2,6 +2,7 @@ package ChatTrigger
 import GlobalObjects
 import ClosureForGroups
 import DungeonMaster
+import Saveload
 public class ChatTrigger
     static bool debugMode = true
     static function chatMessage(string m, player p)
@@ -33,8 +34,14 @@ public class ChatTrigger
                 m.rtrim().substring(m.lastIndexOf(" "), m.length()).toInt().toReal())
         if(m == "-enter")
             enterDungeon(p)
-
-
+        
+        if(m.startsWith("-charset "))
+            print(m.rtrim().substring(m.lastIndexOf(" "), m.length()).toInt().toCharsetString()) 
+        if(m == "-save")
+            Saveload.save(p)
+        
+        if(m.startsWith("-load "))
+            Saveload.load(p, m.rtrim().substring(m.lastIndexOf(" "), m.length()))
     private static function setCamera(string m, player p)
         if not m.contains(" ")
             return
@@ -49,6 +56,8 @@ public class ChatTrigger
         forUnitsOfPlayer(p) u->
             u.remove()
         createUnit(p,'e002',gg_rct_SelectHeroArea.getCenter(), angle(0.0))
+        GlobalObjects.playerObjects.get(p.getId()).uHero = null
+        GlobalObjects.playerObjects.get(p.getId()).uBackpack = null
         p.setLumber(0)
         p.setGold(0)
         //TODO: remove all items
