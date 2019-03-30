@@ -10,11 +10,8 @@ import SpellText
 
 
 public class Reflect
-    static let SPELL_EFFECT_PATH = Abilities.thunderclapCaster
     static function initiate()
-
         EventListener.onPointCast('A01M') (caster, tpos) ->
-            flashEffect(SPELL_EFFECT_PATH, tpos)
             print ("damage deal!")
             let strenght = caster.getStr(true)
             forUnitsInRange(tpos, 100) u ->

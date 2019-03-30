@@ -2,6 +2,7 @@ package Spells
 import Comet
 import FrostNova
 import Reflect
+import Heal
 
 public class Spells
     
@@ -10,5 +11,5 @@ public class Spells
         FrostNova.initiate()
         Comet.initiate()
         Reflect.initiate()
-
+        Heal.initiate()
 

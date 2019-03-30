@@ -13,6 +13,7 @@ import SpellText
 public class Comet
     static let SPELL_EFFECT_PATH = Abilities.flameStrike
     static function initiate()
+    
         EventListener.onPointCast('A005') (caster, tpos) ->
             flashEffect(SPELL_EFFECT_PATH, tpos)
             doAfter(2.0) ->

@@ -9,19 +9,18 @@ import SpellText
 
 
 public class Heal
-    static let SPELL_EFFECT_PATH = Abilities.healTarget
+    
     static function initiate()
 
-        EventListener.onPointCast('A00G') (caster, tpos) ->
-            flashEffect(SPELL_EFFECT_PATH, tpos)
+        EventListener.onTargetCast('A01P') (caster, target) ->
             print ("heal")
-            forUnitsInRange(tpos, 200) u ->
-                if caster.getOwner().isAllyOf(u.getOwner()) 
-                let damage = caster.getInt(true) * (2+ 0.5+GetSpellAbilityUnit().getAbilityLevel(GetSpellAbilityId()))
-                caster.addHP(damage)
-            forUnitsInRange(tpos, 200) u -> 
-                if caster.getOwner().isEnemyOf(u.getOwner())
-                let damage = caster.getInt(true) * (2+ 0.5+GetSpellAbilityUnit().getAbilityLevel(GetSpellAbilityId()))
-                caster.damageTarget(u, damage)
-                SpellText.showSpellDamageText(damage.toInt().toString(), u)
+            if caster.getOwner().isAllyOf(target.getOwner())
+                let heal = caster.getInt(true) * (2+ 0.5+GetSpellAbilityUnit().getAbilityLevel(GetSpellAbilityId()))
+                target.addHP(heal)
+
+           
+                if not caster.getOwner().isAllyOf(target.getOwner())
+                    let damage = caster.getInt(true) * (2+ 0.5+GetSpellAbilityUnit().getAbilityLevel(GetSpellAbilityId()))
+                    caster.damageTarget(target, damage)
+                    SpellText.showSpellDamageText(damage.toInt().toString(), target)
                 
