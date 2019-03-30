@@ -1,9 +1,14 @@
 package Spells
 import Comet
+import FrostNova
+import Reflect
+
 public class Spells
     
+
     static function initiate()
+        FrostNova.initiate()
         Comet.initiate()
+        Reflect.initiate()
 
 
-       

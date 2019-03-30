@@ -1,0 +1,22 @@
+package FrostNova
+
+import public BuffObjEditing
+import ClosureEvents
+import public Assets
+import ClosureForGroups
+import SpellText
+
+
+
+public class FrostNova
+    static let SPELL_EFFECT_PATH = Abilities.frostNovaTarget
+    static function initiate()
+
+        EventListener.onPointCast('A01N') (caster, tpos) ->
+            flashEffect(SPELL_EFFECT_PATH, tpos)
+            print ("damage deal!")
+            forUnitsInRange(tpos, 200) u ->
+                if not caster.getOwner().isAllyOf(u.getOwner())
+                let damage = caster.getInt(true) * (2+ 0.5+GetSpellAbilityUnit().getAbilityLevel(GetSpellAbilityId()))
+                caster.damageTarget(u, damage)
+                SpellText.showSpellDamageText(damage.toInt().toString(), u)
