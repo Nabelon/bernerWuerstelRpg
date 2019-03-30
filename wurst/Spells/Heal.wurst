@@ -14,7 +14,7 @@ public class Heal
         EventListener.onTargetCast('A01P') (caster, target) ->
             print ("heal")
             if caster.getOwner().isAllyOf(target.getOwner())
-                let heal = caster.getInt(true) * (2+ 0.5+GetSpellAbilityUnit().getAbilityLevel(GetSpellAbilityId()))
+                let heal = caster.getInt(true) * (2+ 0.5*GetSpellAbilityUnit().getAbilityLevel(GetSpellAbilityId()))
                 target.addHP(heal)
                 SpellText.showSpellDamageText(heal.toInt().toString(), target)
            
