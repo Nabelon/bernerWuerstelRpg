@@ -3,7 +3,6 @@ package Heal
 import public BuffObjEditing
 import ClosureEvents
 import public Assets
-import ClosureForGroups
 import SpellText
 
 
@@ -17,10 +16,10 @@ public class Heal
             if caster.getOwner().isAllyOf(target.getOwner())
                 let heal = caster.getInt(true) * (2+ 0.5+GetSpellAbilityUnit().getAbilityLevel(GetSpellAbilityId()))
                 target.addHP(heal)
-
+                SpellText.showSpellDamageText(heal.toInt().toString(), target)
            
-                if not caster.getOwner().isAllyOf(target.getOwner())
-                    let damage = caster.getInt(true) * (2+ 0.5+GetSpellAbilityUnit().getAbilityLevel(GetSpellAbilityId()))
-                    caster.damageTarget(target, damage)
-                    SpellText.showSpellDamageText(damage.toInt().toString(), target)
+            if caster.getOwner().isEnemyOf(target.getOwner())
+                let damage = caster.getInt(true) * (2+ 0.5+GetSpellAbilityUnit().getAbilityLevel(GetSpellAbilityId()))
+                caster.damageTarget(target, damage)
+                SpellText.showSpellDamageText(damage.toInt().toString(), target)
                 
