@@ -27,7 +27,7 @@ public class Drops
         return 0
     
     private static function addFirstAreaDrops()
-        //noob bandits
+        //G010/G011/G012
         IterableMap<int,real> m = new IterableMap<int,real>()
         m.put('I00A',0.02) //boots
         m.put('I007',0.02) //ring
@@ -41,11 +41,11 @@ public class Drops
         creepDrops.put('n000', m)
         creepDrops.put('n007', m)
 
-        //mage/pala
+        //G013/G014
         m = new IterableMap<int,real>()
         m.put('I00B',0.015) //boots uncommon
         m.put('I00C',0.015) //ring uncommon
-        m.put('I00D',0.015) //off-hand staff uncommon
+        m.put('I00D',0.015) //main-hand staff uncommon
         m.put('I00E',0.015) //helmet uncommon
         m.put('I00F',0.015) //armor uncommon
         m.put('I00G',0.015) //main-hand axe uncommon
@@ -58,10 +58,44 @@ public class Drops
         m = new IterableMap<int,real>()
         m.put('I00L',0.125) //boots rare
         m.put('I00N',0.125) //ring rare
-        m.put('I00Q',0.125) //off-hand staff rare
+        m.put('I00Q',0.125) //main-hand staff rare
         m.put('I00M',0.125) //helmet rare
         m.put('I00R',0.125) //armor rare
         m.put('I00S',0.125) //main-hand axe rare
         m.put('I00P',0.125) //off-hand int rare
         m.put('I00O',0.125) //off-hand agi rare
         bossDrops.put('N00J', m)
+
+        //G020/G021
+        m = new IterableMap<int,real>()
+        m.put('I010',0.015) //boots common
+        m.put('I00Z',0.015) //ring common
+        m.put('I014',0.015) //main-hand staff common
+        m.put('I00Y',0.015) //helmet common
+        m.put('I011',0.015) //armor common
+        m.put('I00X',0.015) //main-hand axe common
+        m.put('I013',0.015) //off-hand common
+        m.put('I012',0.015) //off-hand common
+        creepDrops.put('n00F', m)
+        creepDrops.put('n00G', m)
+
+        //G022
+        m = new IterableMap<int,real>()
+        m.put('I018',0.015) //boots uncommon
+        m.put('I017',0.015) //ring uncommon
+        m.put('I01C',0.015) //main-hand staff uncommon
+        m.put('I016',0.015) //helmet uncommon
+        m.put('I019',0.015) //armor uncommon
+        m.put('I01A',0.015) //main-hand axe uncommon
+        m.put('I015',0.015) //off-hand uncommon
+        m.put('I01B',0.015) //off-hand uncommon
+        creepDrops.put('n00H', m)
+
+        //G030/G031
+        m = new IterableMap<int,real>()
+        m.put('I00U',0.015) //Fighter wings
+        m.put('I00W',0.015) //Mage wings
+        m.put('I00T',0.015) //Hunter wings
+        m.put('I00V',0.015) //Archer wings
+        creepDrops.put('n00N', m)
+        creepDrops.put('n00O', m)
