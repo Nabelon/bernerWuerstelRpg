@@ -8,7 +8,7 @@ import Drops
 import GlobalObjects
 import LinkedList
 HashMap<int,CreepRespawnInfo> creepInfo = new HashMap<int,CreepRespawnInfo>()
-real creepRespawnTime = 30.0
+real creepRespawnTime = 35.0
 LinkedList<string> itemSlots = new LinkedList<string>()..add("Body Armor")..add("Helmet")..add("Off-Hand")
     ..add("Boots")..add("Main-Hand")..add("Accessory")..add("Wings")
 public class CreepRespawnInfo
