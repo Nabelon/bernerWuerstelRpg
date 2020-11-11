@@ -16,7 +16,7 @@ public class Comet
     
         EventListener.onPointCast('A005') (caster, tpos) ->
             flashEffect(SPELL_EFFECT_PATH, tpos)
-            doAfter(2.0) ->
+            doAfter(1.5) ->
                 print ("damage deal!")
                 let inteligence = caster.getInt(true)
                 forUnitsInRange(tpos, 200) u ->

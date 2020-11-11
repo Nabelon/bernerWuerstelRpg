@@ -5,6 +5,10 @@ public class GlobalObjects
     static IterableMap<int, PlayerObject> playerObjects
     static LinkedList<int> playerIDs
 
+    static HashMap<int,string> idToClass = new HashMap<int,string>()..put('N002',"Archer")..put('N004',"Hunter")
+    ..put('N003',"Mage")..put('N005',"Fighter")
+    static LinkedList<int> classes = new LinkedList<int>()..add('N002')..add('N004')..add('N003')..add('N005')
+
     static function initiate()
         playerObjects = new IterableMap<int,PlayerObject>()
         playerIDs = new LinkedList<int>()

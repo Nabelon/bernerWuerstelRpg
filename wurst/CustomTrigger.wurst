@@ -101,7 +101,12 @@ public class CustomTrigger
                             if(itmp.getDescription().contains(tmp) and itmp != i)
                                 t.removeItem(i)
                                 i.setPos(t.getPos())
-
+                
+                for c in GlobalObjects.classes
+                    let tmp = GlobalObjects.idToClass.get(c) + "|r"
+                    if i.getDescription().contains(tmp) and c != t.getTypeId()
+                        t.removeItem(i)
+                        i.setPos(t.getPos())
                 
         //all chat trigger
         EventListener.add(EVENT_PLAYER_CHAT_FILTER) ->
