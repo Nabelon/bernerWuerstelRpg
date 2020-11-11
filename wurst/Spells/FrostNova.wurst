@@ -17,6 +17,6 @@ public class FrostNova
             print ("damage deal!")
             forUnitsInRange(tpos, 200) u ->
                 if not caster.getOwner().isAllyOf(u.getOwner())
-                let damage = caster.getInt(true) * (2+ 0.5*GetSpellAbilityUnit().getAbilityLevel(GetSpellAbilityId()))
-                caster.damageTarget(u, damage)
-                SpellText.showSpellDamageText(damage.toInt().toString(), u)
+                    let damage = caster.getInt(true) * (2+ 0.5*GetSpellAbilityUnit().getAbilityLevel(GetSpellAbilityId()))
+                    caster.damageTarget(u, damage)
+                    SpellText.showSpellDamageText(damage.toInt().toString(), u)
