@@ -18,7 +18,7 @@ public class Drops
                     createItem(getRandomItem(bossDrops.get(u.getTypeId())), u.getPos())
                     
     static private function getRandomItem(IterableMap<int,real> m) returns int
-        real random = GetRandomReal(0,1)
+        let random = GetRandomReal(0,1)
         real sum = 0
         for itemId in m
             sum += m.get(itemId)
@@ -28,7 +28,7 @@ public class Drops
     
     private static function addFirstAreaDrops()
         //G010/G011/G012
-        IterableMap<int,real> m = new IterableMap<int,real>()
+        var m = new IterableMap<int,real>()
         m.put('I00A',0.02) //boots
         m.put('I007',0.02) //ring
         m.put('I009',0.02) //main-hand staff

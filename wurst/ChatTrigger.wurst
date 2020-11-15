@@ -3,6 +3,7 @@ import GlobalObjects
 import ClosureForGroups
 import DungeonMaster
 import Saveload
+import Fusions
 public class ChatTrigger
     static bool debugMode = true
     static function chatMessage(string m, player p)
@@ -34,7 +35,8 @@ public class ChatTrigger
                 m.rtrim().substring(m.lastIndexOf(" "), m.length()).toInt().toReal())
         if(m == "-enter")
             enterDungeon(p)
-        
+        if (m== "-fusion")
+            Fusions.tryFusion(p.getId())
         if(m.startsWith("-charset "))
             print(m.rtrim().substring(m.lastIndexOf(" "), m.length()).toInt().toCharsetString()) 
         if(m == "-save")

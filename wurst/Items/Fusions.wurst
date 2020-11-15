@@ -1,0 +1,53 @@
+package Fusions
+import HashMap
+import LinkedList
+import GlobalObjects
+public class Fusions
+    static let fusionItemRecipe =  new IterableMap<int, LinkedList<int>>()
+        ..put('I002', new LinkedList<int>()..add('I007','I003'))
+    static let itemToFusion = new IterableMap<int , LinkedList<int>>()
+
+    static function initiate()
+        for i in fusionItemRecipe
+            for i2 in fusionItemRecipe.get(i)
+                if itemToFusion.hasKey(i2)
+                    itemToFusion.get(i2).add(i)
+                else
+                    itemToFusion.put(i2, new LinkedList<int>()..add(i))
+
+    static function tryFusion(int pId)
+        let ownedItems = new IterableMap<int, int>()
+        for i in GlobalObjects.playerObjects.get(pId).uHero.inventory()
+            ownedItems.put(i.getTypeId(), 1)
+        for i in GlobalObjects.playerObjects.get(pId).uBackpack.inventory()
+            ownedItems.put(i.getTypeId(), 1)
+        
+        for i in ownedItems
+            if itemToFusion.hasKey(i)
+                for i2 in itemToFusion.get(i)
+                    bool notFound = false
+                    for i3 in fusionItemRecipe.get(i2)
+                        notFound = ownedItems.hasKey(i3) ? notFound : false
+                    if( not notFound)
+                        fuse(pId, i2)
+                        return
+                
+    private static function fuse(int pId, int itemId)
+        for i in fusionItemRecipe.get(itemId)
+            bool wasRemoved = false
+            for i2 in GlobalObjects.playerObjects.get(pId).uHero.inventory()
+                if not wasRemoved and i2.getTypeId() == i
+                    GlobalObjects.playerObjects.get(pId).uHero.removeItem(i2)
+                    i2.remove()
+                    wasRemoved = true
+            for i2 in GlobalObjects.playerObjects.get(pId).uBackpack.inventory()
+                if not wasRemoved and i2.getTypeId() == i
+                    GlobalObjects.playerObjects.get(pId).uBackpack.removeItem(i2)
+                    i2.remove()
+                    wasRemoved = true
+        GlobalObjects.playerObjects.get(pId).uHero.addItemById(itemId)
+
+        
+
+
+            

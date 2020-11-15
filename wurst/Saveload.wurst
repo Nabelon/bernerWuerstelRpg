@@ -14,7 +14,7 @@ public class Saveload
     ..put('N002',"0")..put('N004',"1")..put('N005',"2")..put('N002',"3")
     
     static function initiate()
-        int array a = ['I00A','I00B','I00C','I00D','I00E','I00F','I00G','I00H','I00I','I00J','I00K',
+        let a = ['I00A','I00B','I00C','I00D','I00E','I00F','I00G','I00H','I00I','I00J','I00K',
         'I00L','I00M','I00N','I001','I002','I003','I004','I005','I006','I007','I008','I009']
         
         for i = 0 to 22
@@ -57,7 +57,7 @@ public class Saveload
         if(savecodeTmp == null)
             printTimedToPlayer("Error in code",10.0,p)
             return
-        string heroStr = savecodeTmp.substring(0, 1)
+        let heroStr = savecodeTmp.substring(0, 1)
         int heroType = 0
         for i in savecodeHeroes
             if savecodeHeroes.get(i) == heroStr
@@ -69,8 +69,8 @@ public class Saveload
         
         for s in GetUnitsOfPlayerAll(p)
             s.remove()
-        unit hero = createUnit(p, heroType, gg_rct_Rez_0.getCenter(), angle(0))
-        unit u = createUnit(p, 'N00B', gg_rct_Rez_0.getCenter(), angle(0))
+        let hero = createUnit(p, heroType, gg_rct_Rez_0.getCenter(), angle(0))
+        let u = createUnit(p, 'N00B', gg_rct_Rez_0.getCenter(), angle(0))
         u.setPathing(false)
         GlobalObjects.playerObjects.get(p.getId()).uBackpack = u
         PanCameraToTimedForPlayer(p, gg_rct_Rez_0.getCenter().x,gg_rct_Rez_0.getCenter().y,0)
@@ -79,7 +79,7 @@ public class Saveload
         hero.addXp(decompressIntFromString(savecodeTmp.substring(0,heroExpLength)), false)
         savecodeTmp = savecodeTmp.substring(heroExpLength)
         for i = 0 to 5
-            string itemStrCode = savecodeTmp.substring(0, 2)
+            let itemStrCode = savecodeTmp.substring(0, 2)
             if(itemStrCode != "00")
                 int itemType = 0
                 for j in savecodeItems
@@ -94,11 +94,11 @@ public class Saveload
         p.setGold(decompressIntFromString(savecodeTmp.substring(0,4)))
         savecodeTmp = savecodeTmp.substring(4)
         p.setLumber(decompressIntFromString(savecodeTmp.substring(0,4)))
-        savecodeTmp = savecodeTmp.substring(4)
+        //savecodeTmp = savecodeTmp.substring(4)
         //TODO:Add backpack, pin camera, remove pickin hero unit
         
     static function nameToChar(string s, int l) returns LinkedList<int>
-        LinkedList<int> r = new LinkedList<int>()   //would like to use array but doesnt seem to work
+        let r = new LinkedList<int>()   //would like to use array but doesnt seem to work
         int hash = s.getHash()
         for i = 0 to l
             r.add(hash)
@@ -123,7 +123,7 @@ public class Saveload
         let randIntStr = compressIntToString(randInt, 4)
         
         let usernameHash = username.getHash().moduloInt(16777215)
-        int hash = xOr(332833123,xOr(randInt,xOr(savecode.getHash(),usernameHash))).moduloInt(16777215)
+        let hash = xOr(332833123,xOr(randInt,xOr(savecode.getHash(),usernameHash))).moduloInt(16777215)
         return compressIntToString(hash, 4) + randIntStr + savecode
     static function decode(string savecode, string username) returns string
         let hash = decompressIntFromString(savecode.substring(1, 5))
@@ -150,7 +150,7 @@ public class Saveload
     static function addColorsToCode(string s) returns string
         string r = ""
         for i = 0 to s.length()-1
-            string char = s.charAt(i)
+            let char = s.charAt(i)
             if (yellowLetters.contains(char))
                 r += "|c00FFFF00" + char + "|r"
             else if (greenLetters.contains(char))

@@ -18,7 +18,7 @@ public class QuestManager
             let i = GetManipulatedItem()
             let u = GetTriggerUnit()
             let quests = pickupItemQuests.get(i.getTypeId())
-            Quest qTmp = tryCreateQuest(i.getTypeId(),u.getOwner())
+            let qTmp = tryCreateQuest(i.getTypeId(),u.getOwner())
             if quests != null
                 for q in quests
                     if(q!=qTmp) 
@@ -26,16 +26,16 @@ public class QuestManager
 
 
         EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
-            unit u = GetTriggerUnit()
-            unit k = GetKillingUnitBJ()
+            let u = GetTriggerUnit()
+            let k = GetKillingUnitBJ()
             let quests = killUnitQuests.get(u.getTypeId())
             if quests != null
                 for q in quests
                     q.unitKilled(u,k)
             
         EventListener.add(EVENT_PLAYER_UNIT_ISSUED_TARGET_ORDER) ->
-            unit talker = GetTriggerUnit()
-            unit target = GetOrderTargetUnit()
+            let talker = GetTriggerUnit()
+            let target = GetOrderTargetUnit()
             let quests = talkToUnitQuests.get(target.getTypeId())
             if quests != null
                 for q in quests
@@ -107,7 +107,7 @@ public class KillUnits extends Quest
             for q in QuestManager.killUnitQuests.get(unitTypeId)
                 if q instanceof KillUnits
                     return
-        int hLevel = GlobalObjects.playerObjects.get(p.getId()).uHero.getLevel()
+        let hLevel = GlobalObjects.playerObjects.get(p.getId()).uHero.getLevel()
         if(hLevel > maxLevel or hLevel < minLevel)
             printTimedToPlayer("Not in level range: " + minLevel.toString() + "-" + maxLevel.toString(), 10, p)
             return
@@ -119,7 +119,7 @@ public class KillUnits extends Quest
 
     override function unitKilled(unit u, unit killer)
         
-        int hLevel = GlobalObjects.playerObjects.get(killer.getOwner().getId()).uHero.getLevel()
+        let hLevel = GlobalObjects.playerObjects.get(killer.getOwner().getId()).uHero.getLevel()
         if(hLevel > maxLevel or hLevel < minLevel)
             return
         killCount++
@@ -142,7 +142,7 @@ public class KillUnits extends Quest
         else
             printTimed("Quest Completed: " + questObjective,10)
             for pId in GlobalObjects.playerIDs
-                unit hero = GlobalObjects.playerObjects.get(pId).uHero
+                let hero = GlobalObjects.playerObjects.get(pId).uHero
                 if(hero.getLevel() <= maxLevel and hero.getLevel() >= minLevel)
                     hero.addXp(expReward, true)
                     hero.getOwner().addGold(goldReward)

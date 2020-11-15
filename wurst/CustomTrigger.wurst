@@ -97,9 +97,10 @@ public class CustomTrigger
                     i.setPos(t.getPos())
                     print("Level must be " + i.getLevel().toString())
                 //check for gearslots
+                let description = i.getDescription()
                 for slot in itemSlots
                     let tmp = slot + "|r, "
-                    if i.getDescription().contains(tmp)
+                    if description.contains(tmp)
                         for itmp in t.inventory()
                             if(itmp.getDescription().contains(tmp) and itmp != i)
                                 t.removeItem(i)
@@ -107,15 +108,28 @@ public class CustomTrigger
                                 print("You already have a item in slot " + tmp)
                 for c in GlobalObjects.classes
                     let tmp = GlobalObjects.idToClass.get(c) + "|r"
-                    if i.getDescription().contains(tmp)
+                    if description.contains(tmp)
                         t.removeItem(i)
                         i.setPos(t.getPos())
-                        print("Your class cannot wear this")
-                
+                        print("Only " + GlobalObjects.idToClass.get(c) + "s cannot wear this")
+                        
         //all chat trigger
         EventListener.add(EVENT_PLAYER_CHAT_FILTER) ->
             let input = GetEventPlayerChatString()
             let p = GetTriggerPlayer()
             ChatTrigger.chatMessage(input, p)
+
+        //stackable items    
+        EventListener.add(EVENT_PLAYER_UNIT_PICKUP_ITEM) ->
+            let t = GetTriggerUnit()
+            let i = GetManipulatedItem()
+            if(i.getCharges() > 0)
+                for itmp in t.inventory()
+                    if itmp.getTypeId() == i.getTypeId() and i != itmp and itmp.getCharges() + i.getCharges() <= 40
+                        itmp.setCharges(itmp.getCharges() + i.getCharges())
+                        t.removeItem(i)
+                        i.remove()
+
+                        
 
     
