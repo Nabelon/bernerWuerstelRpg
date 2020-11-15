@@ -52,19 +52,18 @@ public class CustomTrigger
                         expText.setVelocity(0, 0.02)
                         doAfter(2.0)->
                             expText.destr()
+            //player revival
             if(t.isType(UNIT_TYPE_HERO) and (t.getOwner().getColor() != PLAYER_COLOR_BROWN and t.getOwner().getColor() != PLAYER_COLOR_BLACK_AGGRESSIVE))
                 //revive hero
                 let ti = CreateTimer()
-                real reviveTime = 5 + Pow(t.getLevel().toReal(),0.5)
+                let reviveTime = 5 + Pow(t.getLevel().toReal(),0.5)
                 StartTimerBJ(ti, false, reviveTime)
                 let tiDialog = CreateTimerDialogBJ(ti,t.getOwner().getName() + "revives in ")
                 doAfter(reviveTime)->
                     DestroyTimerDialog(tiDialog)
                     ReviveHero(t, gg_rct_Rez_0.getCenter().x, gg_rct_Rez_0.getCenter().y, true)
 
-                
-
-        
+                   
         //creep respawn			
         //set positions
         for u in GetUnitsInRectAll(GetPlayableMapRect())
@@ -88,12 +87,16 @@ public class CustomTrigger
                 PanCameraToTimedForPlayer(a.getOwner(), pos.x, pos.y,0)
                 RemoveUnit(a)
                 
-        //only one item for each item slot
+        //check if player is allowed to wear item
         EventListener.add(EVENT_PLAYER_UNIT_PICKUP_ITEM) ->
             let t = GetTriggerUnit()
             let i = GetManipulatedItem()
-            
             if((not (t.getOwner().getColor() == PLAYER_COLOR_BROWN or t.getOwner().getColor() == PLAYER_COLOR_BLACK_AGGRESSIVE)) and t.getTypeId() != 'N00B')
+                if(t.getLevel() < i.getLevel())
+                    t.removeItem(i)
+                    i.setPos(t.getPos())
+                    print("Level must be " + i.getLevel().toString())
+                //check for gearslots
                 for slot in itemSlots
                     let tmp = slot + "|r, "
                     if i.getDescription().contains(tmp)
@@ -101,12 +104,13 @@ public class CustomTrigger
                             if(itmp.getDescription().contains(tmp) and itmp != i)
                                 t.removeItem(i)
                                 i.setPos(t.getPos())
-                
+                                print("You already have a item in slot " + tmp)
                 for c in GlobalObjects.classes
                     let tmp = GlobalObjects.idToClass.get(c) + "|r"
-                    if i.getDescription().contains(tmp) and c != t.getTypeId()
+                    if i.getDescription().contains(tmp)
                         t.removeItem(i)
                         i.setPos(t.getPos())
+                        print("Your class cannot wear this")
                 
         //all chat trigger
         EventListener.add(EVENT_PLAYER_CHAT_FILTER) ->
