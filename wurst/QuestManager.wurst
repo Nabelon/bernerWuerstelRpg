@@ -65,9 +65,17 @@ public class QuestManager
     static function tryCreateQuest(int iId, player p) returns Quest
         switch iId
             case 'I006' 
-                return new KillUnits('n001',15,'n008',iId,"Kill Bandits",0,15,1000,200)..initiate(p)
+                return new KillUnits('n001',15,'n008',iId,"Kill Bandits",0,25,1000,200)..initiate(p)
+            case 'I01I' 
+                return new KillUnits('n009',10,'n008',iId,"Kill Paladins",0,40,1500,0)..initiate(p)
+            case 'I01J' 
+                return new KillUnits('n00F',20,'n008',iId,"Kill Gouls",20,50,3000,2000)..initiate(p)
+            case 'I01K' 
+                return new KillUnits('n00M',25,'n008',iId,"Kill Vampires",30,65,5000,3000)..initiate(p)
+            case 'I01L' 
+                return new KillUnits('n00N',25,'n008',iId,"Kill Faries",40,90,7000,5000)..initiate(p)
             case 'I005' 
-                return new KillUnits('n009',10,'n008',iId,"Kill Paladins",10,30,1500,0)..initiate(p)
+                return new KillUnits('n00Z',30,'n008',iId,"Kill Wendigos",50,120,10000,0)..initiate(p)
         return null
 public abstract class Quest
     abstract function initiate(player p)
@@ -120,7 +128,7 @@ public class KillUnits extends Quest
     override function unitKilled(unit u, unit killer)
         
         let hLevel = GlobalObjects.playerObjects.get(killer.getOwner().getId()).uHero.getLevel()
-        if(hLevel > maxLevel or hLevel < minLevel)
+        if(hLevel+10 > maxLevel or hLevel < minLevel-5)
             return
         killCount++
         if(killCount <= killsNeeded)
@@ -143,7 +151,7 @@ public class KillUnits extends Quest
             printTimed("Quest Completed: " + questObjective,10)
             for pId in GlobalObjects.playerIDs
                 let hero = GlobalObjects.playerObjects.get(pId).uHero
-                if(hero.getLevel() <= maxLevel and hero.getLevel() >= minLevel)
+                if(hero.getLevel() >= minLevel)
                     hero.addXp(expReward, true)
                     hero.getOwner().addGold(goldReward)
             QuestManager.killUnitQuests.get(unitTypeId).remove(this)

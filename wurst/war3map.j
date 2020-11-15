@@ -16,7 +16,6 @@ rect gg_rct_G01DungeonInEntrance= null
 rect gg_rct_G01DungeonOutEntrance= null
 rect gg_rct_G01DungeonRect= null
 trigger gg_trg_MakeVisibleAreas= null
-trigger gg_trg_Item_Level_Requirement= null
 trigger gg_trg_WB1_Donnerschlag= null
 trigger gg_trg_WB1_Faehigkeit_Damag_Buf= null
 trigger gg_trg_WB1_Faehigkeit_Beschwoeren= null
@@ -196,7 +195,7 @@ function CreateUnitsForPlayer11 takes nothing returns nothing
     call IssueImmediateOrder(gg_unit_N00D_0112, "")
     set u=BlzCreateUnitWithSkin(p, 'N00J', 28007.6, 21332.8, 183.590, 'N00J')
     call IssueImmediateOrder(u, "")
-    set u=BlzCreateUnitWithSkin(p, 'N013', 27375.3, 23102.5, 198.079, 'N013')
+    set u=BlzCreateUnitWithSkin(p, 'N013', 27379.4, 23163.9, 198.079, 'N013')
 endfunction
 
 //===========================================================================
@@ -738,33 +737,6 @@ function InitTrig_MakeVisibleAreas takes nothing returns nothing
 endfunction
 
 //===========================================================================
-// Trigger: Item Level Requirement
-//
-// Item Level Requirement ist abhängig von dem Leben der Items.
-//===========================================================================
-function Trig_Item_Level_Requirement_Func001C takes nothing returns boolean
-    if ( not ( GetUnitLevel(GetTriggerUnit()) < R2I(GetItemLifeBJ(GetManipulatedItem())) ) ) then
-        return false
-    endif
-    return true
-endfunction
-
-function Trig_Item_Level_Requirement_Actions takes nothing returns nothing
-    if ( Trig_Item_Level_Requirement_Func001C() ) then
-        call UnitRemoveItemSwapped(GetManipulatedItem(), GetTriggerUnit())
-        call DisplayTextToForce(GetForceOfPlayer(GetTriggerPlayer()), ( "You must be level " + ( I2S(R2I(GetItemLifeBJ(GetManipulatedItem()))) + " for beeing able to equip this item." ) ))
-    else
-    endif
-endfunction
-
-//===========================================================================
-function InitTrig_Item_Level_Requirement takes nothing returns nothing
-    set gg_trg_Item_Level_Requirement=CreateTrigger()
-    call TriggerRegisterAnyUnitEventBJ(gg_trg_Item_Level_Requirement, EVENT_PLAYER_UNIT_PICKUP_ITEM)
-    call TriggerAddAction(gg_trg_Item_Level_Requirement, function Trig_Item_Level_Requirement_Actions)
-endfunction
-
-//===========================================================================
 // Trigger: WB1 Donnerschlag
 //===========================================================================
 function Trig_WB1_Donnerschlag_Conditions takes nothing returns boolean
@@ -837,7 +809,6 @@ endfunction
 //===========================================================================
 function InitCustomTriggers takes nothing returns nothing
     call InitTrig_MakeVisibleAreas()
-    call InitTrig_Item_Level_Requirement()
     call InitTrig_WB1_Donnerschlag()
     call InitTrig_WB1_Faehigkeit_Damag_Buf()
     call InitTrig_WB1_Faehigkeit_Beschwoeren()
