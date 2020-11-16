@@ -5,6 +5,10 @@ import GlobalObjects
 public class Fusions
     static let fusionItemRecipe =  new IterableMap<int, LinkedList<int>>()
         ..put('I002', new LinkedList<int>()..add('I007','I003'))
+        ..put('I01M', new LinkedList<int>()..add('I01X','I01W','I01D'))
+        ..put('I01N', new LinkedList<int>()..add('I01Y','I01E','I01V'))
+        ..put('I01O', new LinkedList<int>()..add('I01Z','I01F','I01S'))
+        ..put('I01P', new LinkedList<int>()..add('I01G','I020','I016'))
     static let itemToFusion = new IterableMap<int , LinkedList<int>>()
 
     static function initiate()

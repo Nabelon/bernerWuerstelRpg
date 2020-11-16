@@ -106,12 +106,12 @@ public class Drops
         
         //DB02 DungeonBoss
         m = new IterableMap<int,real>()
-        m.put('I01X',0.01) //Combat recipe
-        m.put('I01Y',0.01) //Mage recipe
-        m.put('I01Z',0.01) //Sneaking recipe
-        m.put('I020',0.01) //Speed recipe
-        m.put('I01V',0.015) //main-hand staff rare
-        m.put('I01S',0.015) //main-hand claw rare
+        m.put('I01X',0.05) //Combat recipe
+        m.put('I01Y',0.05) //Mage recipe
+        m.put('I01Z',0.05) //Sneaking recipe
+        m.put('I020',0.05) //Speed recipe
+        m.put('I01V',0.15) //main-hand staff rare
+        m.put('I01S',0.15) //main-hand claw rare
         creepDrops.put('n014', m)
 
         //WB01 WorldBoss
@@ -120,4 +120,4 @@ public class Drops
         m.put('I01N',0.125) //Wings of Mage
         m.put('I01O',0.125) //Wings of Sneaking
         m.put('I02P',0.125) //Wings of Speed
-        creepDrops.put('n014', m)
+        creepDrops.put('n00D', m)
