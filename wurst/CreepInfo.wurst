@@ -1,0 +1,10 @@
+package CreepInfo
+import HashMap
+public class CreepInfo
+    static HashMap<int,CreepRespawnInfo> creepInfo = new HashMap<int,CreepRespawnInfo>()
+public class CreepRespawnInfo
+    function set(vec2 v, angle a)
+        this.v = v
+        this.a = a
+    vec2 v
+    angle a

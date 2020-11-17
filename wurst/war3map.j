@@ -20,6 +20,22 @@ trigger gg_trg_WB1_Donnerschlag= null
 trigger gg_trg_WB1_Faehigkeit_Damag_Buf= null
 trigger gg_trg_WB1_Faehigkeit_Beschwoeren= null
 unit gg_unit_N00D_0112= null
+rect gg_rct_G02DungeonRect0= null
+rect gg_rct_G02DungeonRect1= null
+rect gg_rct_G02DungeonRect2= null
+rect gg_rct_G02DungeonRect3= null
+rect gg_rct_G02DungeonOutEntrance= null
+rect gg_rct_G02DungeonInEntrance= null
+rect gg_rct_G00DungeonInEntrance= null
+rect gg_rct_G00DungeonOutEntrance= null
+rect gg_rct_G00DungeonRect0= null
+rect gg_rct_G00DungeonRect1= null
+rect gg_rct_G00DungeonRect2= null
+rect gg_rct_G00MustClear0= null
+rect gg_rct_G00TPifClearIn= null
+rect gg_rct_G00TPifClearOut= null
+rect gg_rct_G00TPDoorIn= null
+rect gg_rct_G00TPDoorOut= null
 
 
 //JASSHelper struct globals:
@@ -195,7 +211,8 @@ function CreateUnitsForPlayer11 takes nothing returns nothing
     call IssueImmediateOrder(gg_unit_N00D_0112, "")
     set u=BlzCreateUnitWithSkin(p, 'N00J', 28007.6, 21332.8, 183.590, 'N00J')
     call IssueImmediateOrder(u, "")
-    set u=BlzCreateUnitWithSkin(p, 'N013', 27379.4, 23163.9, 198.079, 'N013')
+    set u=BlzCreateUnitWithSkin(p, 'N013', 27379.4, 23163.9, 198.080, 'N013')
+    set u=BlzCreateUnitWithSkin(p, 'N014', 23923.9, 18242.3, 182.071, 'N014')
 endfunction
 
 //===========================================================================
@@ -630,6 +647,31 @@ function CreateNeutralHostile takes nothing returns nothing
     set u=BlzCreateUnitWithSkin(p, 'n00X', 26034.0, 23165.3, 239.960, 'n00X')
     set u=BlzCreateUnitWithSkin(p, 'n012', 27651.2, 24880.8, 158.296, 'n012')
     set u=BlzCreateUnitWithSkin(p, 'n00Z', 20962.9, 30474.0, 296.519, 'n00Z')
+    set u=BlzCreateUnitWithSkin(p, 'n00L', 22391.3, 21876.9, 341.938, 'n00L')
+    set u=BlzCreateUnitWithSkin(p, 'n00L', 22484.3, 21809.1, 226.193, 'n00L')
+    set u=BlzCreateUnitWithSkin(p, 'n00L', 22308.8, 21739.7, 273.161, 'n00L')
+    set u=BlzCreateUnitWithSkin(p, 'n00L', 21436.3, 21277.9, 192.080, 'n00L')
+    set u=BlzCreateUnitWithSkin(p, 'n00L', 21564.7, 21292.9, 250.144, 'n00L')
+    set u=BlzCreateUnitWithSkin(p, 'n00L', 22325.1, 21195.3, 220.678, 'n00L')
+    set u=BlzCreateUnitWithSkin(p, 'n00L', 22196.8, 21141.9, 288.334, 'n00L')
+    set u=BlzCreateUnitWithSkin(p, 'n00L', 22282.9, 21046.4, 198.035, 'n00L')
+    set u=BlzCreateUnitWithSkin(p, 'n00L', 23197.3, 21249.6, 321.261, 'n00L')
+    set u=BlzCreateUnitWithSkin(p, 'n00L', 22907.5, 20691.2, 47.287, 'n00L')
+    set u=BlzCreateUnitWithSkin(p, 'n00M', 23174.3, 21123.2, 72.754, 'n00M')
+    set u=BlzCreateUnitWithSkin(p, 'n00M', 23047.1, 20628.6, 13.558, 'n00M')
+    set u=BlzCreateUnitWithSkin(p, 'n00M', 21504.7, 20669.3, 235.082, 'n00M')
+    set u=BlzCreateUnitWithSkin(p, 'n00M', 21701.9, 20658.4, 321.657, 'n00M')
+    set u=BlzCreateUnitWithSkin(p, 'n00M', 21512.2, 21347.4, 58.856, 'n00M')
+    set u=BlzCreateUnitWithSkin(p, 'n00M', 23898.7, 20814.1, 60.009, 'n00M')
+    set u=BlzCreateUnitWithSkin(p, 'n00M', 22767.8, 19890.5, 3.823, 'n00M')
+    set u=BlzCreateUnitWithSkin(p, 'n00M', 22764.6, 19648.4, 242.080, 'n00M')
+    set u=BlzCreateUnitWithSkin(p, 'n00M', 22767.4, 19441.0, 176.677, 'n00M')
+    set u=BlzCreateUnitWithSkin(p, 'n00M', 23089.2, 19881.3, 38.354, 'n00M')
+    set u=BlzCreateUnitWithSkin(p, 'n00M', 23026.2, 19642.7, 12.942, 'n00M')
+    set u=BlzCreateUnitWithSkin(p, 'n00M', 23055.1, 19403.6, 218.184, 'n00M')
+    set u=BlzCreateUnitWithSkin(p, 'n00L', 23350.0, 19933.5, 54.593, 'n00L')
+    set u=BlzCreateUnitWithSkin(p, 'n00L', 23294.6, 19634.2, 325.040, 'n00L')
+    set u=BlzCreateUnitWithSkin(p, 'n00L', 23286.2, 19441.0, 80.653, 'n00L')
 endfunction
 
 //===========================================================================
@@ -705,7 +747,23 @@ function CreateRegions takes nothing returns nothing
     set gg_rct_Region_001=Rect(16416.0, 3808.0, 16544.0, 3936.0)
     set gg_rct_G01DungeonInEntrance=Rect(3648.0, 832.0, 4288.0, 1568.0)
     set gg_rct_G01DungeonOutEntrance=Rect(27552.0, 17536.0, 28064.0, 18016.0)
-    set gg_rct_G01DungeonRect=Rect(24704.0, 17312.0, 28416.0, 22624.0)
+    set gg_rct_G01DungeonRect=Rect(24864.0, 17024.0, 28384.0, 21920.0)
+    set gg_rct_G02DungeonRect0=Rect(23648.0, 22112.0, 28256.0, 31744.0)
+    set gg_rct_G02DungeonRect1=Rect(19872.0, 25376.0, 23680.0, 31712.0)
+    set gg_rct_G02DungeonRect2=Rect(22752.0, 22592.0, 24096.0, 23232.0)
+    set gg_rct_G02DungeonRect3=Rect(22016.0, 23168.0, 23776.0, 25440.0)
+    set gg_rct_G02DungeonOutEntrance=Rect(24096.0, 30528.0, 24960.0, 30912.0)
+    set gg_rct_G02DungeonInEntrance=Rect(26784.0, 15296.0, 28032.0, 16384.0)
+    set gg_rct_G00DungeonInEntrance=Rect(18240.0, - 7904.0, 19072.0, - 6720.0)
+    set gg_rct_G00DungeonOutEntrance=Rect(21280.0, 21984.0, 22016.0, 22496.0)
+    set gg_rct_G00DungeonRect0=Rect(20832.0, 17312.0, 24768.0, 21568.0)
+    set gg_rct_G00DungeonRect1=Rect(20832.0, 21568.0, 23456.0, 22208.0)
+    set gg_rct_G00DungeonRect2=Rect(20832.0, 22208.0, 23168.0, 22720.0)
+    set gg_rct_G00MustClear0=Rect(20992.0, 19040.0, 24544.0, 20192.0)
+    set gg_rct_G00TPifClearIn=Rect(24160.0, 19168.0, 24512.0, 20064.0)
+    set gg_rct_G00TPifClearOut=Rect(21120.0, 17792.0, 21376.0, 18496.0)
+    set gg_rct_G00TPDoorIn=Rect(24224.0, 20352.0, 24480.0, 21120.0)
+    set gg_rct_G00TPDoorOut=Rect(21152.0, 19360.0, 21376.0, 19936.0)
 endfunction
 
 //***************************************************************************

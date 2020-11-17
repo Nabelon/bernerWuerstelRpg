@@ -7,16 +7,10 @@ import UnitIndexer
 import Drops
 import GlobalObjects
 import LinkedList
-HashMap<int,CreepRespawnInfo> creepInfo = new HashMap<int,CreepRespawnInfo>()
+import CreepInfo
 real creepRespawnTime = 35.0
 LinkedList<string> itemSlots = new LinkedList<string>()..add("Body Armor")..add("Helmet")..add("Off-Hand")
     ..add("Boots")..add("Main-Hand")..add("Accessory")..add("Wings")
-public class CreepRespawnInfo
-    function set(vec2 v, angle a)
-        this.v = v
-        this.a = a
-    vec2 v
-    angle a
 public class CustomTrigger
         
     static function addInitialTriggers()
@@ -24,13 +18,14 @@ public class CustomTrigger
         EventListener.add(EVENT_PLAYER_UNIT_DEATH) ->
             let t = GetTriggerUnit()
             if(t.getOwner().getColor() == PLAYER_COLOR_BROWN or t.getOwner().getColor() == PLAYER_COLOR_BLACK_AGGRESSIVE)
-                if(creepInfo.has(t.getIndex()))
+                if(CreepInfo.creepInfo.has(t.getIndex()))
                     Drops.dropItem(t)
+                    
                     doAfter(creepRespawnTime)->
-                        let cInfo = creepInfo.get(t.getIndex())
+                        let cInfo = CreepInfo.creepInfo.get(t.getIndex())
                         let c = createUnit(t.getOwner(),t.getTypeId(),cInfo.v,cInfo.a)
-                        creepInfo.put(c.toUnitIndex().getIndex(), creepInfo.get(t.getIndex()))
-                        creepInfo.remove(t.getIndex())
+                        CreepInfo.creepInfo.put(c.toUnitIndex().getIndex(), CreepInfo.creepInfo.get(t.getIndex()))
+                        CreepInfo.creepInfo.remove(t.getIndex())
                         t.remove()
 
                        
@@ -70,7 +65,7 @@ public class CustomTrigger
             if (u.getOwner().getId() == PLAYER_COLOR_BROWN.getPlayer().getId() or u.getOwner().getColor() == PLAYER_COLOR_BLACK_AGGRESSIVE)
                 let c = new CreepRespawnInfo()
                 c.set(u.getPos(), u.getFacingAngle())
-                creepInfo.put(u.toUnitIndex().getIndex(), c)
+                CreepInfo.creepInfo.put(u.toUnitIndex().getIndex(), c)
                 
         //select hero
         EventListener.add(EVENT_PLAYER_UNIT_ATTACKED) ->
@@ -111,7 +106,7 @@ public class CustomTrigger
                     if description.contains(tmp)
                         t.removeItem(i)
                         i.setPos(t.getPos())
-                        print("Only " + GlobalObjects.idToClass.get(c) + "s cannot wear this")
+                        print("Only " + GlobalObjects.idToClass.get(c) + "s can wear this")
                         
         //all chat trigger
         EventListener.add(EVENT_PLAYER_CHAT_FILTER) ->

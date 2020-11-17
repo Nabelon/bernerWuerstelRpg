@@ -1,22 +1,47 @@
 package DungeonMaster
 import HashMap
 import GlobalObjects
-
-
+import UnitIndexer
+import LinkedList
+import CreepInfo
 public class DungeonMaster
-    static let  dungeonEntrancesToStart = new IterableMap<rect,rect>()
-        ..put(gg_rct_G01DungeonInEntrance, gg_rct_G01DungeonOutEntrance)
-    static let  dungeonEntrancesToArea = new IterableMap<rect,rect>()
-            ..put(gg_rct_G01DungeonInEntrance, gg_rct_G01DungeonRect)
+    static let  dungeonToStart = new IterableMap<int,rect>()
+        ..put(0, gg_rct_G00DungeonOutEntrance)
+        ..put(1, gg_rct_G01DungeonOutEntrance)
+        ..put(2, gg_rct_G02DungeonOutEntrance)
+    static let  dungeonEntrancesToDungeon= new IterableMap<rect,int>()
+        ..put(gg_rct_G00DungeonInEntrance, 0)
+        ..put(gg_rct_G01DungeonInEntrance, 1)
+        ..put(gg_rct_G02DungeonInEntrance, 2)
+    static IterableMap<UnitIndex,int> unitIndexToDungeon = new IterableMap<UnitIndex,int>()
+    static IterableMap<int,LinkedList<rect>> dungeonAreas = new IterableMap<int,LinkedList<rect>>
+        ..put(0,new LinkedList<rect>()..add(gg_rct_G00DungeonRect0,gg_rct_G00DungeonRect1,gg_rct_G00DungeonRect2))
+        ..put(1,new LinkedList<rect>()..add(gg_rct_G01DungeonRect))
+        ..put(2,new LinkedList<rect>()..add(gg_rct_G02DungeonRect0,gg_rct_G02DungeonRect1,gg_rct_G02DungeonRect2,gg_rct_G02DungeonRect3))
     static function playerWantsToEnter(player p)
-        for r in dungeonEntrancesToStart
+        for r in dungeonEntrancesToDungeon
             if GlobalObjects.playerObjects.get(p.getId()).uHero.getPos().isInRect(r)
-                for u in GetUnitsInRectAll(dungeonEntrancesToArea.get(r))
-                    if(u.getOwner().getColor() != PLAYER_COLOR_BROWN and u.getOwner().getColor() != PLAYER_COLOR_BLACK_AGGRESSIVE)
-                        printTimedToPlayer("Someone is already in the dungeon!", 10, p)
-                        return
-                for u in GetUnitsInRectAll(r)
-                    if u.getOwner().getColor() != PLAYER_COLOR_BROWN and IsHeroUnitId(u.getTypeId())
-                        u.setPos(dungeonEntrancesToStart.get(r).randomPoint())
+                for area in dungeonAreas.get(dungeonEntrancesToDungeon.get(r))
+                    for u in GetUnitsInRectAll(area)
+                        if(u.getOwner().getColor() != PLAYER_COLOR_BROWN and u.getOwner().getColor() != PLAYER_COLOR_BLACK_AGGRESSIVE)
+                            printTimedToPlayer("Someone is already in the dungeon!", 10, p)
+                            return
+                enterDungeon(r)
                 return
-
+    static private function enterDungeon(rect entrance)
+        let dungeon = dungeonEntrancesToDungeon.get(entrance)
+        for u in GetUnitsInRectAll(entrance)
+            if u.getOwner().getColor() != PLAYER_COLOR_BROWN and IsHeroUnitId(u.getTypeId())
+                u.setPos(dungeonToStart.get(dungeon).randomPoint())
+        for i in unitIndexToDungeon
+            if unitIndexToDungeon.get(i) == dungeon
+                let cInfo = CreepInfo.creepInfo.get(i.getIndex())
+                let c = createUnit(i.getUnit().getOwner(),i.getUnit().getTypeId(),cInfo.v,cInfo.a)
+                CreepInfo.creepInfo.put(c.toUnitIndex().getIndex(), CreepInfo.creepInfo.get(i.getIndex()))
+                CreepInfo.creepInfo.remove(i.getIndex())
+                i.getUnit().remove()
+    static function addCreepsToDungeonList()
+        for d in dungeonAreas
+            for area in dungeonAreas.get(d)
+                for u in GetUnitsInRectAll(area)
+                    unitIndexToDungeon.put(u.toUnitIndex(),d)
